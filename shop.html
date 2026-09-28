@@ -47,20 +47,8 @@
 
             <nav class="nav" id="shop-navigation">
 
-                <a href="index.html">
-                    Home
-                </a>
-
                 <a href="card.html">
-                    About
-                </a>
-
-                <a href="conference.html">
-                    Conference
-                </a>
-
-                <a href="#register">
-                    Register
+                    My-Card
                 </a>
 
                 <a href="shop.html" class="active">
@@ -68,7 +56,7 @@
                 </a>
 
                 <a href="#register" class="btn btn--light">
-                    Join Us
+                    Register
                 </a>
 
             </nav>
@@ -83,7 +71,7 @@
                     aria-label="View cart">
 
                     <span class="cart-icon">
-                        🛍
+                        🧺
                     </span>
 
                     <span
@@ -100,7 +88,8 @@
                     id="mobile-menu-button"
                     type="button"
                     aria-label="Open menu"
-                    aria-expanded="false">
+                    aria-expanded="false"
+                    aria-controls="drawer">
 
                     <span></span>
 
@@ -117,20 +106,21 @@
          MOBILE DRAWER
     ====================================================== -->
 
-    <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer" id="drawer">
 
         <div class="mobile-drawer__top">
 
             <a href="index.html">
-                <img src="images/logo.png" alt="She Blossoms">
+                <img src="/images/she-blossom-logo.png" alt="She Blossoms">
             </a>
 
             <button
                 class="mobile-close"
                 type="button"
+                data-close
                 aria-label="Close menu">
 
-                ×
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ6GmZ4k0F4C2J4SRc5LAmw8pNSPG-6yDFGak6hFwKAA&s=10" alt="">
 
             </button>
 
@@ -139,28 +129,17 @@
 
         <nav>
 
-            <a href="index.html">
-                Home
+            <a href="card.html">
+                My-Card
             </a>
 
-            <a href="about.html">
-                About
-            </a>
-
-            <a href="conference.html">
-                Conference
-            </a>
-
-            <a href="register.html">
-                Register
-            </a>
 
             <a href="shop.html">
                 Shop
             </a>
 
-            <a href="register.html" class="btn">
-                Join Us
+            <a href="#register" class="btn">
+                Register
             </a>
 
         </nav>
@@ -969,7 +948,7 @@
         <div class="shop-wrap">
 
             <div class="footer-wordmark">
-                Shop
+                Evolve
             </div>
 
 
@@ -980,7 +959,7 @@
                 </a>
 
                 <a href="card.html">
-                    About
+                    My-Card
                 </a>
 
                 <a href="conference.html">
