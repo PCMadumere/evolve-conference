@@ -13,6 +13,16 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap"
         rel="stylesheet">
+    <!-- Script for emailjs -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "pI-CC10ALlJHd8_Kg",
+            });
+        })();
+    </script>
     <style>
         /* ---------- Tokens ---------- */
         :root {
@@ -1075,9 +1085,8 @@
     <main id="top">
 
         <section class="hero">
-            <video class="hero__video"
-                src="hero-video.mp4"
-                autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+            <video class="hero__video" src="/video/hero-video.mp4" autoplay muted loop playsinline preload="auto"
+                aria-hidden="true"></video>
             <div class="wrap">
                 <h1 class="hero__title condensed">Evolve</h1>
                 <div class="hero__meta">
@@ -1348,7 +1357,7 @@
                             autocomplete="name" required></div>
                     <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email"
                             type="email" autocomplete="email" required></div>
-                    <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" name="phone"
+                    <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" name="number"
                             type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 0801 234 5678" required>
                     </div>
                     <div class="field"><label for="f-address">City or address</label><input id="f-address"
@@ -1427,6 +1436,8 @@
         </div>
     </footer>
 
+    <script src="/js/form.js"></script>
+
     <script>
         /* Placeholder images: hide the broken-image icon until real files are added */
         document.querySelectorAll('img').forEach(img => {
@@ -1486,32 +1497,10 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) close(); });
         })();
 
-        /* Registration: set FORM_ENDPOINT to your backend */
-        (() => {
-            const FORM_ENDPOINT = '';
-            const form = document.getElementById('register-form');
-            const status = form.querySelector('.form__status');
-            const btn = form.querySelector('button[type="submit"]');
-            const say = (msg, state) => { status.textContent = msg; status.dataset.state = state || ''; };
-            form.addEventListener('submit', async e => {
-                e.preventDefault();
-                if (!form.checkValidity()) {
-                    say('Fill in your name, a valid email, your phone number, and whether this is your first time.', 'error');
-                    const bad = form.querySelector(':invalid'); bad && bad.focus();
-                    return;
-                }
-                if (!FORM_ENDPOINT) { say('Registration isn\u2019t connected yet. Set FORM_ENDPOINT in the page script.', 'error'); return; }
-                btn.disabled = true; btn.textContent = 'Reserving\u2026'; say('');
-                try {
-                    const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) });
-                    if (!res.ok) throw new Error(res.status);
-                    form.reset(); say('Seat reserved. See you on 6 November.');
-                } catch {
-                    say('Your registration didn\u2019t go through. Check your connection and try again.', 'error');
-                } finally { btn.disabled = false; btn.textContent = 'Reserve my seat'; }
-            });
-        })();
+
     </script>
+    <script src="/js/form.js"></script>
+
 </body>
 
 </html>
