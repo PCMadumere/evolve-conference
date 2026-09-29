@@ -792,14 +792,34 @@ resetButton?.addEventListener("click", () => {
    MOBILE NAVIGATION
 ============================================================ */
 
-menuButton?.addEventListener("click", () => {
-    if (!cardNav) return;
+(() => {
+    const menuButton = document.getElementById("cardMenuButton");
+    const cardNav = document.getElementById("cardNav");
 
-    const open = cardNav.classList.toggle("card-mobile-open");
+    if (!menuButton || !cardNav) return;
 
-    menuButton.setAttribute("aria-expanded", String(open));
-    menuButton.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-});
+    menuButton.addEventListener("click", () => {
+        const isOpen = cardNav.classList.toggle("card-mobile-open");
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "Close menu" : "Open menu"
+        );
+    });
+
+    cardNav.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            cardNav.classList.remove("card-mobile-open");
+            menuButton.setAttribute("aria-expanded", "false");
+            menuButton.setAttribute("aria-label", "Open menu");
+        });
+    });
+})();
 
 /* ============================================================
    INITIAL DRAW

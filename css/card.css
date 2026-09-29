@@ -1994,3 +1994,76 @@ body.card-page {
         display: none;
     }
 }
+
+/* ============================================================
+   FINAL MOBILE MENU OVERRIDE
+   The opening hamburger lives in the header.
+============================================================ */
+
+.card-page .header .menu-btn {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    margin-left: auto;
+    padding: 0;
+    display: grid !important;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.38);
+    border-radius: 50%;
+    background: rgba(18,9,16,.20);
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 110;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.card-page .header .menu-btn span,
+.card-page .header .menu-btn span::before,
+.card-page .header .menu-btn span::after {
+    display: block !important;
+    width: 20px;
+    height: 2px;
+    background: currentColor !important;
+    position: relative;
+    content: "";
+}
+
+.card-page .header .menu-btn span::before {
+    position: absolute;
+    left: 0;
+    top: -7px;
+}
+
+.card-page .header .menu-btn span::after {
+    position: absolute;
+    left: 0;
+    top: 7px;
+}
+
+.card-page .drawer {
+    z-index: 1000;
+}
+
+@media (max-width: 959px) {
+    .card-page .header .nav {
+        display: none !important;
+    }
+
+    .card-page .header .menu-btn {
+        display: grid !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+@media (min-width: 960px) {
+    .card-page .header .nav {
+        display: flex !important;
+    }
+
+    .card-page .header .menu-btn {
+        display: none !important;
+    }
+}
