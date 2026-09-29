@@ -485,6 +485,8 @@ body.shop-page {
     padding:
         0 1.75rem;
 
+        margin: 0.7rem auto;
+
     border: 0;
 
     border-radius: 999px;
@@ -1307,6 +1309,8 @@ body.shop-page {
 
     overflow: visible;
 
+    cursor: pointer;
+
     text-overflow: clip;
 
     transition:
@@ -1936,6 +1940,7 @@ body.shop-page {
     line-height: 1.2;
 
     white-space: normal;
+    cursor: pointer;
 
     transition:
         transform 0.15s ease,
