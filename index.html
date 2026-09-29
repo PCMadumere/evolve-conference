@@ -77,6 +77,27 @@
             overflow-x: hidden;
         }
 
+        /* ========================================================= */
+    #copyButton {
+
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: var(--plum);
+    color: #e6e2e2;
+
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#copyMessage {
+    margin-top: 10px;
+    font-size: 16px;
+}
+        /* ========================================================= */
+
         img,
         video {
             display: block;
@@ -1400,7 +1421,9 @@
                         who build. Your support makes this conference and our work with women possible.</p>
                     <p class="link"
                         >SHE BLOSSOMS LADIES FELLOWSHIP <br>
-                        Fidelity Bank: 5601734922</p>
+                        Fidelity Bank: <span id="copyText">5601734922</span></p>
+                        <p id="copyMessage" class="muted"></p>
+                        <button id="copyButton">Copy</button>
                 </div>
                 <div>
                     <h2>Show up in style</h2>
@@ -1511,6 +1534,32 @@
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) close(); });
         })();
 
+         /*=========================================================*/
+            const copyButton = document.getElementById("copyButton");
+const copyText = document.getElementById("copyText");
+const copyMessage = document.getElementById("copyMessage");
+
+copyButton.addEventListener("click", async () => {
+    const text = copyText.innerText;
+
+    try {
+        await navigator.clipboard.writeText(text);
+
+        copyButton.textContent = "Copied!";
+        copyMessage.textContent = "Acct No copied to clipboard.";
+
+        setTimeout(() => {
+            copyButton.textContent = "Copy";
+            copyMessage.textContent = "";
+        }, 2000);
+
+    } catch (error) {
+        console.error("Copy failed:", error);
+
+        copyMessage.textContent = "Unable to copy the text.";
+    }
+});
+         /*=========================================================*/
 
     </script>
     <script src="/js/form.js"></script>
