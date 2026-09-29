@@ -160,10 +160,213 @@
 
     /* =====================================================
        CART
+       Persists across refreshes for up to 1 hour of inactivity.
     ===================================================== */
 
-    const cart = [];
+    const CART_STORAGE_KEY = "sheBlossomsCart";
 
+    const CART_ACTIVITY_KEY =
+        "sheBlossomsCartLastActivity";
+
+    const CART_IDLE_LIMIT =
+        60 * 60 * 1000; // 1 hour
+
+
+    /* =====================================================
+       RESTORE SAVED CART
+    ===================================================== */
+
+    const getSavedCart = () => {
+
+        try {
+
+            const savedCart =
+                localStorage.getItem(
+                    CART_STORAGE_KEY
+                );
+
+
+            const lastActivity =
+                Number(
+                    localStorage.getItem(
+                        CART_ACTIVITY_KEY
+                    ) || 0
+                );
+
+
+            /* Nothing saved */
+
+            if (
+                !savedCart ||
+                !lastActivity
+            ) {
+
+                return [];
+
+            }
+
+
+            /* Clear cart after 1 hour of inactivity */
+
+            if (
+                Date.now() - lastActivity >=
+                CART_IDLE_LIMIT
+            ) {
+
+                localStorage.removeItem(
+                    CART_STORAGE_KEY
+                );
+
+                localStorage.removeItem(
+                    CART_ACTIVITY_KEY
+                );
+
+                return [];
+
+            }
+
+
+            const parsed =
+                JSON.parse(savedCart);
+
+
+            return Array.isArray(parsed)
+
+                ? parsed
+
+                    .filter(
+                        (item) =>
+                            item &&
+                            item.id &&
+                            item.name &&
+                            Number(item.price) > 0 &&
+                            Number(item.quantity) > 0
+                    )
+
+                    .map(
+                        (item) => ({
+                            id: String(item.id),
+
+                            name: String(item.name),
+
+                            price: Number(item.price),
+
+                            size: item.size
+                                ? String(item.size)
+                                : "One Size",
+
+                            quantity:
+                                Math.max(
+                                    1,
+                                    Number(
+                                        item.quantity
+                                    )
+                                )
+                        })
+                    )
+
+                : [];
+
+        } catch (error) {
+
+            console.error(
+                "Unable to restore cart:",
+                error
+            );
+
+
+            localStorage.removeItem(
+                CART_STORAGE_KEY
+            );
+
+            localStorage.removeItem(
+                CART_ACTIVITY_KEY
+            );
+
+
+            return [];
+
+        }
+
+    };
+
+
+    /* =====================================================
+       CURRENT CART
+    ===================================================== */
+
+    const cart =
+        getSavedCart();
+
+
+    /* =====================================================
+       SAVE CART
+       Saving also resets the 1-hour inactivity timer.
+    ===================================================== */
+
+    const saveCart = () => {
+
+        try {
+
+            /* If cart is empty, remove saved cart */
+
+            if (
+                cart.length === 0
+            ) {
+
+                localStorage.removeItem(
+                    CART_STORAGE_KEY
+                );
+
+                localStorage.removeItem(
+                    CART_ACTIVITY_KEY
+                );
+
+                return;
+
+            }
+
+
+            localStorage.setItem(
+                CART_STORAGE_KEY,
+                JSON.stringify(cart)
+            );
+
+
+            localStorage.setItem(
+                CART_ACTIVITY_KEY,
+                String(Date.now())
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Unable to save cart:",
+                error
+            );
+
+        }
+
+    };
+
+
+    /* =====================================================
+       PAGE VISIT COUNTS AS ACTIVITY
+    ===================================================== */
+
+    if (
+        cart.length > 0
+    ) {
+
+        saveCart();
+
+    }
+
+
+
+    /* =====================================================
+       CART ELEMENTS
+    ===================================================== */
 
     const cartList =
         document.getElementById(
@@ -212,13 +415,17 @@
        FORMAT NAIRA
     ===================================================== */
 
-    const formatNaira = (amount) => {
+    const formatNaira = (
+        amount
+    ) => {
 
         return (
             "₦" +
             Number(
                 amount || 0
-            ).toLocaleString("en-NG")
+            ).toLocaleString(
+                "en-NG"
+            )
         );
 
     };
@@ -232,7 +439,10 @@
     const getCartQuantity = () => {
 
         return cart.reduce(
-            (total, item) => {
+            (
+                total,
+                item
+            ) => {
 
                 return (
                     total +
@@ -254,7 +464,10 @@
     const getCartTotal = () => {
 
         return cart.reduce(
-            (total, item) => {
+            (
+                total,
+                item
+            ) => {
 
                 return (
                     total +
@@ -282,7 +495,9 @@
             getCartQuantity();
 
 
-        if (navCartCount) {
+        if (
+            navCartCount
+        ) {
 
             navCartCount.textContent =
                 quantity;
@@ -299,14 +514,19 @@
 
     const renderCart = () => {
 
-        if (!cartList) {
+        if (
+            !cartList
+        ) {
+
+            updateCartCount();
 
             return;
 
         }
 
 
-        cartList.innerHTML = "";
+        cartList.innerHTML =
+            "";
 
 
         const quantity =
@@ -318,9 +538,13 @@
 
 
 
-        /* Empty cart */
+        /* =================================================
+           EMPTY CART
+        ================================================= */
 
-        if (cartEmpty) {
+        if (
+            cartEmpty
+        ) {
 
             cartEmpty.hidden =
                 cart.length !== 0;
@@ -329,9 +553,13 @@
 
 
 
-        /* Cart item label */
+        /* =================================================
+           CART ITEM LABEL
+        ================================================= */
 
-        if (cartItemLabel) {
+        if (
+            cartItemLabel
+        ) {
 
             cartItemLabel.textContent =
                 quantity === 1
@@ -342,21 +570,32 @@
 
 
 
-        /* Cart total */
+        /* =================================================
+           CART TOTAL
+        ================================================= */
 
-        if (cartTotal) {
+        if (
+            cartTotal
+        ) {
 
             cartTotal.textContent =
-                formatNaira(total);
+                formatNaira(
+                    total
+                );
 
         }
 
 
 
-        /* Render each item */
+        /* =================================================
+           RENDER EACH CART ITEM
+        ================================================= */
 
         cart.forEach(
-            (item, index) => {
+            (
+                item,
+                index
+            ) => {
 
                 const li =
                     document.createElement(
@@ -370,17 +609,15 @@
 
                 li.innerHTML = `
 
-                    <div>
+                    <div class="cart-line-info">
 
                         <span
                             class="cart-item-name">
                         </span>
 
-
                         <span
                             class="cart-item-meta">
                         </span>
-
 
                         <div
                             class="cart-item-controls">
@@ -390,92 +627,100 @@
                                 type="button"
                                 data-action="decrease"
                                 data-index="${index}"
-                                aria-label="Decrease quantity">
-
+                                aria-label="Decrease quantity"
+                            >
                                 −
-
                             </button>
 
-
                             <span
-                                class="quantity-value">
-
+                                class="cart-quantity">
                                 ${item.quantity}
-
                             </span>
-
 
                             <button
                                 class="quantity-button"
                                 type="button"
                                 data-action="increase"
                                 data-index="${index}"
-                                aria-label="Increase quantity">
-
+                                aria-label="Increase quantity"
+                            >
                                 +
-
                             </button>
-
 
                             <button
                                 class="remove-item"
                                 type="button"
                                 data-action="remove"
-                                data-index="${index}">
-
+                                data-index="${index}"
+                            >
                                 Remove
-
                             </button>
 
                         </div>
 
                     </div>
 
-
-                    <strong>
-
-                        ${formatNaira(
-                            item.price *
-                            item.quantity
-                        )}
-
+                    <strong
+                        class="cart-item-price">
                     </strong>
 
                 `;
 
 
-
-                const itemName =
+                const nameElement =
                     li.querySelector(
                         ".cart-item-name"
                     );
 
 
-                if (itemName) {
-
-                    itemName.textContent =
-                        item.name;
-
-                }
-
-
-
-                const itemMeta =
+                const metaElement =
                     li.querySelector(
                         ".cart-item-meta"
                     );
 
 
-                if (itemMeta) {
+                const priceElement =
+                    li.querySelector(
+                        ".cart-item-price"
+                    );
 
-                    itemMeta.textContent =
+
+                if (
+                    nameElement
+                ) {
+
+                    nameElement.textContent =
+                        item.name;
+
+                }
+
+
+                if (
+                    metaElement
+                ) {
+
+                    metaElement.textContent =
                         `Size: ${item.size}`;
 
                 }
 
 
+                if (
+                    priceElement
+                ) {
 
-                cartList.appendChild(li);
+                    priceElement.textContent =
+                        formatNaira(
+                            item.price *
+                            item.quantity
+                        );
+
+                }
+
+
+                cartList.appendChild(
+                    li
+                );
 
             }
         );
@@ -488,10 +733,21 @@
 
 
     /* =====================================================
-       ADD PRODUCT TO CART
+       ADD ITEM TO CART
     ===================================================== */
 
-    const addToCart = (button) => {
+    const addToCart = (
+        button
+    ) => {
+
+        if (
+            !button
+        ) {
+
+            return;
+
+        }
+
 
         const id =
             button.dataset.id;
@@ -503,29 +759,13 @@
 
         const price =
             Number(
-                button.dataset.price || 0
+                button.dataset.price
             );
-
-
-        const card =
-            button.closest(
-                ".product-card"
-            );
-
-
-        const sizeSelect =
-            card
-                ? card.querySelector(
-                    ".product-size"
-                )
-                : null;
 
 
         const size =
-            sizeSelect
-                ? sizeSelect.value
-                : "One Size";
-
+            button.dataset.size ||
+            "One Size";
 
 
         if (
@@ -534,24 +774,32 @@
             !price
         ) {
 
+            console.error(
+                "Invalid product data:",
+                button.dataset
+            );
+
             return;
 
         }
 
 
+        /* Check if item already exists */
 
-        const existing =
+        const existingItem =
             cart.find(
-                item =>
+                (item) =>
                     item.id === id &&
                     item.size === size
             );
 
 
+        if (
+            existingItem
+        ) {
 
-        if (existing) {
-
-            existing.quantity += 1;
+            existingItem.quantity +=
+                1;
 
         } else {
 
@@ -572,15 +820,20 @@
         }
 
 
+        /* Save cart */
+
+        saveCart();
+
+
+        /* Update cart */
 
         renderCart();
-
 
 
         /* Button feedback */
 
         const originalText =
-            button.textContent.trim();
+            button.textContent;
 
 
         button.textContent =
@@ -589,7 +842,6 @@
 
         button.disabled =
             true;
-
 
 
         setTimeout(
@@ -604,7 +856,6 @@
             },
             900
         );
-
 
 
         /* On mobile/tablet,
@@ -638,7 +889,9 @@
             ".add-to-cart"
         )
         .forEach(
-            (button) => {
+            (
+                button
+            ) => {
 
                 button.addEventListener(
                     "click",
@@ -660,11 +913,15 @@
        CART CONTROLS
     ===================================================== */
 
-    if (cartList) {
+    if (
+        cartList
+    ) {
 
         cartList.addEventListener(
             "click",
-            (event) => {
+            (
+                event
+            ) => {
 
                 const button =
                     event.target.closest(
@@ -672,12 +929,13 @@
                     );
 
 
-                if (!button) {
+                if (
+                    !button
+                ) {
 
                     return;
 
                 }
-
 
 
                 const index =
@@ -694,7 +952,9 @@
                     cart[index];
 
 
-                if (!item) {
+                if (
+                    !item
+                ) {
 
                     return;
 
@@ -702,25 +962,31 @@
 
 
 
-                /* Increase */
+                /* =================================================
+                   INCREASE
+                ================================================= */
 
                 if (
                     action === "increase"
                 ) {
 
-                    item.quantity += 1;
+                    item.quantity +=
+                        1;
 
                 }
 
 
 
-                /* Decrease */
+                /* =================================================
+                   DECREASE
+                ================================================= */
 
                 if (
                     action === "decrease"
                 ) {
 
-                    item.quantity -= 1;
+                    item.quantity -=
+                        1;
 
 
                     if (
@@ -738,7 +1004,9 @@
 
 
 
-                /* Remove */
+                /* =================================================
+                   REMOVE
+                ================================================= */
 
                 if (
                     action === "remove"
@@ -752,6 +1020,12 @@
                 }
 
 
+                /* Save changes */
+
+                saveCart();
+
+
+                /* Re-render */
 
                 renderCart();
 
@@ -791,6 +1065,108 @@
 
 
     /* =====================================================
+       CART ACTIVITY
+       User activity keeps the cart alive for another hour.
+    ===================================================== */
+
+    let activityTimer =
+        null;
+
+
+    const refreshCartActivity =
+        () => {
+
+            if (
+                cart.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                localStorage.setItem(
+                    CART_ACTIVITY_KEY,
+                    String(
+                        Date.now()
+                    )
+                );
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Unable to refresh cart activity:",
+                    error
+                );
+
+            }
+
+        };
+
+
+    /* =====================================================
+       REGISTER USER ACTIVITY
+       We don't write to localStorage on every mouse move.
+    ===================================================== */
+
+    const registerActivity =
+        () => {
+
+            if (
+                cart.length === 0 ||
+                activityTimer
+            ) {
+
+                return;
+
+            }
+
+
+            activityTimer =
+                setTimeout(
+                    () => {
+
+                        refreshCartActivity();
+
+                        activityTimer =
+                            null;
+
+                    },
+                    30000
+                );
+
+        };
+
+
+    [
+        "click",
+        "keydown",
+        "scroll",
+        "touchstart",
+        "mousemove"
+    ].forEach(
+        (
+            eventName
+        ) => {
+
+            document.addEventListener(
+                eventName,
+                registerActivity,
+                {
+                    passive: true
+                }
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
        WHATSAPP ORDER
     =====================================================
 
@@ -812,7 +1188,8 @@
        the leading 0
     ===================================================== */
 
-    const WHATSAPP_NUMBER = "";
+    const WHATSAPP_NUMBER =
+        "";
 
 
 
@@ -839,14 +1216,18 @@
        SEND WHATSAPP ORDER
     ===================================================== */
 
-    if (whatsappButton) {
+    if (
+        whatsappButton
+    ) {
 
         whatsappButton.addEventListener(
             "click",
             () => {
 
 
-                /* Check cart */
+                /* =================================================
+                   CHECK CART
+                ================================================= */
 
                 if (
                     cart.length === 0
@@ -862,7 +1243,9 @@
 
 
 
-                /* Get customer name */
+                /* =================================================
+                   GET CUSTOMER NAME
+                ================================================= */
 
                 const name =
                     customerName
@@ -871,7 +1254,9 @@
 
 
 
-                /* Get customer phone */
+                /* =================================================
+                   GET CUSTOMER PHONE
+                ================================================= */
 
                 const phone =
                     customerPhone
@@ -880,16 +1265,22 @@
 
 
 
-                /* Validate name */
+                /* =================================================
+                   VALIDATE NAME
+                ================================================= */
 
-                if (!name) {
+                if (
+                    !name
+                ) {
 
                     alert(
                         "Please enter your full name."
                     );
 
 
-                    if (customerName) {
+                    if (
+                        customerName
+                    ) {
 
                         customerName.focus();
 
@@ -902,16 +1293,22 @@
 
 
 
-                /* Validate phone */
+                /* =================================================
+                   VALIDATE PHONE
+                ================================================= */
 
-                if (!phone) {
+                if (
+                    !phone
+                ) {
 
                     alert(
                         "Please enter your phone number."
                     );
 
 
-                    if (customerPhone) {
+                    if (
+                        customerPhone
+                    ) {
 
                         customerPhone.focus();
 
@@ -924,7 +1321,9 @@
 
 
 
-                /* Check WhatsApp number */
+                /* =================================================
+                   CHECK WHATSAPP NUMBER
+                ================================================= */
 
                 if (
                     !WHATSAPP_NUMBER
@@ -940,7 +1339,9 @@
 
 
 
-                /* Get payment method */
+                /* =================================================
+                   GET PAYMENT METHOD
+                ================================================= */
 
                 const payment =
                     document.querySelector(
@@ -955,11 +1356,16 @@
 
 
 
-                /* Build order lines */
+                /* =================================================
+                   BUILD ORDER LINES
+                ================================================= */
 
                 const lines =
                     cart.map(
-                        (item, index) => {
+                        (
+                            item,
+                            index
+                        ) => {
 
                             return (
                                 `${index + 1}. ` +
@@ -977,7 +1383,9 @@
 
 
 
-                /* Build WhatsApp message */
+                /* =================================================
+                   BUILD WHATSAPP MESSAGE
+                ================================================= */
 
                 const message = [
 
@@ -1007,11 +1415,15 @@
 
                     "Please confirm availability and payment details."
 
-                ].join("\n");
+                ].join(
+                    "\n"
+                );
 
 
 
-                /* Create WhatsApp URL */
+                /* =================================================
+                   CREATE WHATSAPP URL
+                ================================================= */
 
                 const whatsappUrl =
                     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -1020,7 +1432,9 @@
 
 
 
-                /* Open WhatsApp */
+                /* =================================================
+                   OPEN WHATSAPP
+                ================================================= */
 
                 window.open(
                     whatsappUrl,
@@ -1045,7 +1459,9 @@
         );
 
 
-    if (currentYear) {
+    if (
+        currentYear
+    ) {
 
         currentYear.textContent =
             new Date().getFullYear();
