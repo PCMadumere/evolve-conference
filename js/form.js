@@ -9,9 +9,9 @@
 
    EMAILJS
         ↓
-   REGISTRATION CONFIRMATION EMAIL
+   CONFIRMATION EMAIL
 
-   Registration number is NOT used.
+   GENDER HAS BEEN REMOVED
 ========================================================= */
 
 
@@ -20,7 +20,7 @@
 ========================================================= */
 
 const GOOGLE_FORM_URL =
-    "https://docs.google.com/forms/d/e/1FAIpQLSdzzNdflrISzCkDZo5wIcj5fHE142Ah7UkimIvXhA-XGbzRgg/formResponse";
+    "https://docs.google.com/forms/d/e/1FAIpQLSdzzNdflRISzCkDZo5wIcj5fHE142Ah7UkimIvXhA-XGbzRgg/formResponse";
 
 
 /* =========================================================
@@ -81,9 +81,6 @@ if (!form) {
     const occupationInput =
         document.getElementById("f-occupation");
 
-    const genderInput =
-        document.getElementById("f-gender");
-
     const messageInput =
         document.getElementById("f-message");
 
@@ -109,16 +106,13 @@ if (!form) {
             return;
         }
 
-
         status.textContent = message;
-
 
         status.classList.remove(
             "success",
             "error",
             "loading"
         );
-
 
         if (type) {
 
@@ -130,7 +124,7 @@ if (!form) {
 
 
     /* =====================================================
-       CLEAR STATUS
+       CLEAR STATUS MESSAGE
     ===================================================== */
 
     function clearStatus() {
@@ -139,9 +133,7 @@ if (!form) {
             return;
         }
 
-
         status.textContent = "";
-
 
         status.classList.remove(
             "success",
@@ -153,7 +145,7 @@ if (!form) {
 
 
     /* =====================================================
-       GET FIRST-TIME VALUE
+       GET FIRST-TIME ATTENDEE VALUE
     ===================================================== */
 
     function getFirstTimerValue() {
@@ -163,33 +155,13 @@ if (!form) {
                 'input[name="first_time"]:checked'
             );
 
-
         if (!selected) {
 
             return "";
 
         }
 
-
         return selected.value;
-
-    }
-
-
-    /* =====================================================
-       GET GENDER VALUE
-    ===================================================== */
-
-    function getGenderValue() {
-
-        if (!genderInput) {
-
-            return "";
-
-        }
-
-
-        return genderInput.value.trim();
 
     }
 
@@ -200,13 +172,14 @@ if (!form) {
 
     async function submitToGoogleForm(data) {
 
-
         const googleFormData =
             new FormData();
 
 
         /* -----------------------------------------------
            FULL NAME
+           Google Form:
+           entry.6185216
         ------------------------------------------------ */
 
         googleFormData.append(
@@ -216,17 +189,33 @@ if (!form) {
 
 
         /* -----------------------------------------------
-           PHONE
+           EMAIL
+           Google Form:
+           entry.1943039311
         ------------------------------------------------ */
 
         googleFormData.append(
             "entry.1943039311",
+            data.email
+        );
+
+
+        /* -----------------------------------------------
+           PHONE
+           Google Form:
+           entry.2008373921
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.2008373921",
             data.phone
         );
 
 
         /* -----------------------------------------------
-           ADDRESS
+           CITY / ADDRESS
+           Google Form:
+           entry.491841401
         ------------------------------------------------ */
 
         googleFormData.append(
@@ -236,17 +225,9 @@ if (!form) {
 
 
         /* -----------------------------------------------
-           EMAIL
-        ------------------------------------------------ */
-
-        googleFormData.append(
-            "entry.760245842",
-            data.email
-        );
-
-
-        /* -----------------------------------------------
            OCCUPATION
+           Google Form:
+           entry.451425346
         ------------------------------------------------ */
 
         googleFormData.append(
@@ -256,22 +237,26 @@ if (!form) {
 
 
         /* -----------------------------------------------
-           GENDER
-        ------------------------------------------------ */
-
-        googleFormData.append(
-            "entry.1911301693",
-            data.gender
-        );
-
-
-        /* -----------------------------------------------
            FIRST TIME ATTENDEE
+           Google Form:
+           entry.802888224
         ------------------------------------------------ */
 
         googleFormData.append(
             "entry.802888224",
             data.first_time
+        );
+
+
+        /* -----------------------------------------------
+           MESSAGE
+           Google Form:
+           entry.969123203
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.969123203",
+            data.message
         );
 
 
@@ -283,9 +268,7 @@ if (!form) {
             GOOGLE_FORM_URL,
             {
                 method: "POST",
-
                 mode: "no-cors",
-
                 body: googleFormData
             }
         );
@@ -301,7 +284,6 @@ if (!form) {
     ===================================================== */
 
     async function sendConfirmationEmail(data) {
-
 
         /* -----------------------------------------------
            CHECK EMAILJS
@@ -321,7 +303,6 @@ if (!form) {
 
 
         try {
-
 
             /* -------------------------------------------
                SEND EMAIL
@@ -350,9 +331,6 @@ if (!form) {
                     occupation:
                         data.occupation,
 
-                    gender:
-                        data.gender,
-
                     first_time:
                         data.first_time,
 
@@ -369,12 +347,10 @@ if (!form) {
 
         } catch (error) {
 
-
             console.error(
                 "EmailJS confirmation failed:",
                 error
             );
-
 
             return false;
 
@@ -440,10 +416,6 @@ if (!form) {
                     : "";
 
 
-            const gender =
-                getGenderValue();
-
-
             const firstTime =
                 getFirstTimerValue();
 
@@ -465,13 +437,11 @@ if (!form) {
                     "error"
                 );
 
-
                 if (nameInput) {
 
                     nameInput.focus();
 
                 }
-
 
                 return;
 
@@ -489,13 +459,11 @@ if (!form) {
                     "error"
                 );
 
-
                 if (emailInput) {
 
                     emailInput.focus();
 
                 }
-
 
                 return;
 
@@ -513,13 +481,11 @@ if (!form) {
                     "error"
                 );
 
-
                 if (emailInput) {
 
                     emailInput.focus();
 
                 }
-
 
                 return;
 
@@ -537,37 +503,11 @@ if (!form) {
                     "error"
                 );
 
-
                 if (phoneInput) {
 
                     phoneInput.focus();
 
                 }
-
-
-                return;
-
-            }
-
-
-            /* ===========================================
-               VALIDATE GENDER
-            =========================================== */
-
-            if (!gender) {
-
-                showStatus(
-                    "Please select your gender.",
-                    "error"
-                );
-
-
-                if (genderInput) {
-
-                    genderInput.focus();
-
-                }
-
 
                 return;
 
@@ -585,14 +525,13 @@ if (!form) {
                     "error"
                 );
 
-
                 return;
 
             }
 
 
             /* ===========================================
-               PREPARE DATA
+               PREPARE FORM DATA
             =========================================== */
 
             const formData = {
@@ -612,9 +551,6 @@ if (!form) {
                 occupation:
                     occupation,
 
-                gender:
-                    gender,
-
                 first_time:
                     firstTime,
 
@@ -630,12 +566,11 @@ if (!form) {
 
             if (submitButton) {
 
-                submitButton.disabled = true;
-
+                submitButton.disabled =
+                    true;
 
                 submitButton.dataset.originalText =
                     submitButton.textContent;
-
 
                 submitButton.textContent =
                     "Submitting...";
@@ -726,14 +661,13 @@ if (!form) {
 
 
                 /* =======================================
-                   ENABLE BUTTON
+                   ENABLE SUBMIT BUTTON
                 ======================================= */
 
                 if (submitButton) {
 
                     submitButton.disabled =
                         false;
-
 
                     submitButton.textContent =
                         submitButton.dataset.originalText ||
