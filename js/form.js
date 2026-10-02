@@ -1,886 +1,745 @@
 /* =========================================================
-   SHE BLOSSOMS — EVOLVE
-   REGISTRATION FORM
-   GOOGLE SHEETS + EMAILJS
+   SHE BLOSSOMS REGISTRATION FORM
+
+   WEBSITE FORM
+        ↓
+   GOOGLE FORM
+        ↓
+   GOOGLE SHEET
+
+   EMAILJS
+        ↓
+   REGISTRATION CONFIRMATION EMAIL
+
+   Registration number is NOT used.
 ========================================================= */
 
 
 /* =========================================================
-   GOOGLE APPS SCRIPT URL
+   GOOGLE FORM RESPONSE URL
 ========================================================= */
 
-const GOOGLE_APPS_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbyQbISeN4QYL4LQYPkxbAT0Fiw5OZpa3nrhdeCM-nn5-84DpRf-JWB3uAuBdx-h9B9tCA/exec";
+const GOOGLE_FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSdzzNdflrISzCkDZo5wIcj5fHE142Ah7UkimIvXhA-XGbzRgg/formResponse";
+
+
+/* =========================================================
+   EMAILJS SETTINGS
+========================================================= */
+
+const EMAILJS_SERVICE_ID =
+    "service_o9kv3ir";
+
+const EMAILJS_TEMPLATE_ID =
+    "template_82ewad3";
 
 
 /* =========================================================
    GET REGISTRATION FORM
 ========================================================= */
 
-const registerForm =
+const form =
     document.getElementById("register-form");
 
 
 /* =========================================================
-   START REGISTRATION SYSTEM
+   STOP IF FORM DOES NOT EXIST
 ========================================================= */
 
-if (registerForm) {
+if (!form) {
 
-    registerForm.addEventListener(
+    console.error(
+        "Registration form #register-form was not found."
+    );
+
+} else {
+
+
+    /* =====================================================
+       GET FORM ELEMENTS
+    ===================================================== */
+
+    const status =
+        form.querySelector(".form__status");
+
+    const submitButton =
+        form.querySelector('button[type="submit"]');
+
+
+    const nameInput =
+        document.getElementById("f-name");
+
+    const emailInput =
+        document.getElementById("f-email");
+
+    const phoneInput =
+        document.getElementById("f-phone");
+
+    const addressInput =
+        document.getElementById("f-address");
+
+    const occupationInput =
+        document.getElementById("f-occupation");
+
+    const genderInput =
+        document.getElementById("f-gender");
+
+    const messageInput =
+        document.getElementById("f-message");
+
+
+    /* =====================================================
+       EMAIL VALIDATION
+    ===================================================== */
+
+    function isValidEmail(email) {
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    }
+
+
+    /* =====================================================
+       SHOW STATUS MESSAGE
+    ===================================================== */
+
+    function showStatus(message, type = "") {
+
+        if (!status) {
+            return;
+        }
+
+
+        status.textContent = message;
+
+
+        status.classList.remove(
+            "success",
+            "error",
+            "loading"
+        );
+
+
+        if (type) {
+
+            status.classList.add(type);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CLEAR STATUS
+    ===================================================== */
+
+    function clearStatus() {
+
+        if (!status) {
+            return;
+        }
+
+
+        status.textContent = "";
+
+
+        status.classList.remove(
+            "success",
+            "error",
+            "loading"
+        );
+
+    }
+
+
+    /* =====================================================
+       GET FIRST-TIME VALUE
+    ===================================================== */
+
+    function getFirstTimerValue() {
+
+        const selected =
+            form.querySelector(
+                'input[name="first_time"]:checked'
+            );
+
+
+        if (!selected) {
+
+            return "";
+
+        }
+
+
+        return selected.value;
+
+    }
+
+
+    /* =====================================================
+       GET GENDER VALUE
+    ===================================================== */
+
+    function getGenderValue() {
+
+        if (!genderInput) {
+
+            return "";
+
+        }
+
+
+        return genderInput.value.trim();
+
+    }
+
+
+    /* =====================================================
+       SUBMIT TO GOOGLE FORM
+    ===================================================== */
+
+    async function submitToGoogleForm(data) {
+
+
+        const googleFormData =
+            new FormData();
+
+
+        /* -----------------------------------------------
+           FULL NAME
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.6185216",
+            data.name
+        );
+
+
+        /* -----------------------------------------------
+           PHONE
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.1943039311",
+            data.phone
+        );
+
+
+        /* -----------------------------------------------
+           ADDRESS
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.491841401",
+            data.address
+        );
+
+
+        /* -----------------------------------------------
+           EMAIL
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.760245842",
+            data.email
+        );
+
+
+        /* -----------------------------------------------
+           OCCUPATION
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.451425346",
+            data.occupation
+        );
+
+
+        /* -----------------------------------------------
+           GENDER
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.1911301693",
+            data.gender
+        );
+
+
+        /* -----------------------------------------------
+           FIRST TIME ATTENDEE
+        ------------------------------------------------ */
+
+        googleFormData.append(
+            "entry.802888224",
+            data.first_time
+        );
+
+
+        /* -----------------------------------------------
+           SEND TO GOOGLE FORMS
+        ------------------------------------------------ */
+
+        await fetch(
+            GOOGLE_FORM_URL,
+            {
+                method: "POST",
+
+                mode: "no-cors",
+
+                body: googleFormData
+            }
+        );
+
+
+        return true;
+
+    }
+
+
+    /* =====================================================
+       SEND CONFIRMATION EMAIL WITH EMAILJS
+    ===================================================== */
+
+    async function sendConfirmationEmail(data) {
+
+
+        /* -----------------------------------------------
+           CHECK EMAILJS
+        ------------------------------------------------ */
+
+        if (
+            typeof emailjs === "undefined"
+        ) {
+
+            console.warn(
+                "EmailJS is not loaded. Confirmation email skipped."
+            );
+
+            return false;
+
+        }
+
+
+        try {
+
+
+            /* -------------------------------------------
+               SEND EMAIL
+            ------------------------------------------- */
+
+            await emailjs.send(
+
+                EMAILJS_SERVICE_ID,
+
+                EMAILJS_TEMPLATE_ID,
+
+                {
+
+                    name:
+                        data.name,
+
+                    email:
+                        data.email,
+
+                    number:
+                        data.phone,
+
+                    address:
+                        data.address,
+
+                    occupation:
+                        data.occupation,
+
+                    gender:
+                        data.gender,
+
+                    first_time:
+                        data.first_time,
+
+                    message:
+                        data.message
+
+                }
+
+            );
+
+
+            return true;
+
+
+        } catch (error) {
+
+
+            console.error(
+                "EmailJS confirmation failed:",
+                error
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FORM SUBMISSION
+    ===================================================== */
+
+    form.addEventListener(
         "submit",
         async function (event) {
+
+
+            /* -------------------------------------------
+               STOP NORMAL FORM SUBMISSION
+            ------------------------------------------- */
 
             event.preventDefault();
 
 
-            /* =================================================
-               SUBMIT BUTTON
-            ================================================= */
+            /* -------------------------------------------
+               CLEAR OLD STATUS
+            ------------------------------------------- */
 
-            const button =
-                registerForm.querySelector(
-                    'button[type="submit"]'
-                );
+            clearStatus();
 
 
-            if (!button) {
-
-                console.error(
-                    "Registration submit button was not found."
-                );
-
-                return;
-            }
-
-
-            /*
-             * Prevent double submission.
-             */
-
-            if (button.disabled) {
-                return;
-            }
-
-
-            /* =================================================
-               FORM FIELDS
-            ================================================= */
-
-            const nameField =
-                document.getElementById("f-name");
-
-            const emailField =
-                document.getElementById("f-email");
-
-            const phoneField =
-                document.getElementById("f-phone");
-
-            const addressField =
-                document.getElementById("f-address");
-
-            const occupationField =
-                document.getElementById("f-occupation");
-
-            const messageField =
-                document.getElementById("f-message");
-
-
-            /* =================================================
-               STATUS MESSAGE
-            ================================================= */
-
-            const status =
-                registerForm.querySelector(
-                    ".form__status"
-                );
-
-
-            /* =================================================
-               FIRST TIME
-            ================================================= */
-
-            const firstTime =
-                registerForm.querySelector(
-                    'input[name="first_time"]:checked'
-                );
-
-
-            /* =================================================
-               CHECK REQUIRED ELEMENTS
-            ================================================= */
-
-            if (
-                !nameField ||
-                !emailField ||
-                !phoneField ||
-                !addressField ||
-                !occupationField ||
-                !messageField
-            ) {
-
-                console.error(
-                    "One or more registration fields are missing."
-                );
-
-
-                if (status) {
-
-                    status.textContent =
-                        "The registration form is not configured correctly.";
-
-                    status.dataset.state =
-                        "error";
-                }
-
-                return;
-            }
-
-
-            /* =================================================
+            /* -------------------------------------------
                GET FORM VALUES
-            ================================================= */
+            ------------------------------------------- */
 
             const name =
-                String(
-                    nameField.value || ""
-                ).trim();
+                nameInput
+                    ? nameInput.value.trim()
+                    : "";
 
 
             const email =
-                String(
-                    emailField.value || ""
-                ).trim();
+                emailInput
+                    ? emailInput.value.trim()
+                    : "";
 
 
-            /*
-             * IMPORTANT
-             *
-             * This is the phone number.
-             *
-             * EmailJS uses:
-             *
-             * {{number}}
-             */
-
-            const number =
-                String(
-                    phoneField.value || ""
-                ).trim();
+            const phone =
+                phoneInput
+                    ? phoneInput.value.trim()
+                    : "";
 
 
             const address =
-                String(
-                    addressField.value || ""
-                ).trim();
+                addressInput
+                    ? addressInput.value.trim()
+                    : "";
 
 
             const occupation =
-                String(
-                    occupationField.value || ""
-                ).trim();
+                occupationInput
+                    ? occupationInput.value.trim()
+                    : "";
+
+
+            const gender =
+                getGenderValue();
+
+
+            const firstTime =
+                getFirstTimerValue();
 
 
             const message =
-                String(
-                    messageField.value || ""
-                ).trim();
+                messageInput
+                    ? messageInput.value.trim()
+                    : "";
 
 
-            /* =================================================
+            /* ===========================================
                VALIDATE NAME
-            ================================================= */
+            =========================================== */
 
             if (!name) {
 
-                if (status) {
+                showStatus(
+                    "Please enter your full name.",
+                    "error"
+                );
 
-                    status.textContent =
-                        "Please enter your full name.";
 
-                    status.dataset.state =
-                        "error";
+                if (nameInput) {
+
+                    nameInput.focus();
+
                 }
 
-                nameField.focus();
 
                 return;
+
             }
 
 
-            /* =================================================
+            /* ===========================================
                VALIDATE EMAIL
-            ================================================= */
+            =========================================== */
 
             if (!email) {
 
-                if (status) {
+                showStatus(
+                    "Please enter your email address.",
+                    "error"
+                );
 
-                    status.textContent =
-                        "Please enter your email address.";
 
-                    status.dataset.state =
-                        "error";
+                if (emailInput) {
+
+                    emailInput.focus();
+
                 }
 
-                emailField.focus();
 
                 return;
+
             }
 
 
-            /* =================================================
+            /* ===========================================
+               VALIDATE EMAIL FORMAT
+            =========================================== */
+
+            if (!isValidEmail(email)) {
+
+                showStatus(
+                    "Please enter a valid email address.",
+                    "error"
+                );
+
+
+                if (emailInput) {
+
+                    emailInput.focus();
+
+                }
+
+
+                return;
+
+            }
+
+
+            /* ===========================================
                VALIDATE PHONE
-            ================================================= */
+            =========================================== */
 
-            if (!number) {
+            if (!phone) {
 
-                if (status) {
+                showStatus(
+                    "Please enter your phone number.",
+                    "error"
+                );
 
-                    status.textContent =
-                        "Please enter your phone number.";
 
-                    status.dataset.state =
-                        "error";
+                if (phoneInput) {
+
+                    phoneInput.focus();
+
                 }
 
-                phoneField.focus();
 
                 return;
+
             }
 
 
-            /* =================================================
-               VALIDATE FIRST TIME
-            ================================================= */
+            /* ===========================================
+               VALIDATE GENDER
+            =========================================== */
+
+            if (!gender) {
+
+                showStatus(
+                    "Please select your gender.",
+                    "error"
+                );
+
+
+                if (genderInput) {
+
+                    genderInput.focus();
+
+                }
+
+
+                return;
+
+            }
+
+
+            /* ===========================================
+               VALIDATE FIRST-TIME QUESTION
+            =========================================== */
 
             if (!firstTime) {
 
-                if (status) {
+                showStatus(
+                    "Please tell us if this is your first She Blossoms conference.",
+                    "error"
+                );
 
-                    status.textContent =
-                        "Please select Yes or No for the first conference question.";
-
-                    status.dataset.state =
-                        "error";
-                }
 
                 return;
+
             }
 
 
-            /* =================================================
-               VALIDATE EMAIL FORMAT
-            ================================================= */
+            /* ===========================================
+               PREPARE DATA
+            =========================================== */
 
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const formData = {
 
+                name:
+                    name,
 
-            if (!emailPattern.test(email)) {
+                email:
+                    email,
 
-                if (status) {
+                phone:
+                    phone,
 
-                    status.textContent =
-                        "Please enter a valid email address.";
+                address:
+                    address,
 
-                    status.dataset.state =
-                        "error";
-                }
+                occupation:
+                    occupation,
 
-                emailField.focus();
+                gender:
+                    gender,
 
-                return;
-            }
+                first_time:
+                    firstTime,
 
-
-            /* =================================================
-               DATA TO GOOGLE APPS SCRIPT
-            ================================================= */
-
-            const params = {
-
-                name: name,
-
-                email: email,
-
-                /*
-                 * Main phone value
-                 */
-                phone: number,
-
-                /*
-                 * Extra phone aliases
-                 */
-                number: number,
-
-                phone_number: number,
-
-                telephone: number,
-
-                address: address,
-
-                occupation: occupation,
-
-                first_time: firstTime.value,
-
-                message: message
+                message:
+                    message
 
             };
 
 
-            /* =================================================
-               DEBUG
-            ================================================= */
+            /* ===========================================
+               DISABLE SUBMIT BUTTON
+            =========================================== */
 
-            console.log(
-                "========== REGISTRATION =========="
-            );
+            if (submitButton) {
 
-            console.log(
-                "Name:",
-                name
-            );
-
-            console.log(
-                "Email:",
-                email
-            );
-
-            console.log(
-                "Phone:",
-                number
-            );
-
-            console.log(
-                "Address:",
-                address
-            );
-
-            console.log(
-                "Occupation:",
-                occupation
-            );
-
-            console.log(
-                "First Time:",
-                firstTime.value
-            );
-
-            console.log(
-                "Message:",
-                message
-            );
-
-            console.log(
-                "Google payload:",
-                params
-            );
-
-            console.log(
-                "=================================="
-            );
+                submitButton.disabled = true;
 
 
-            /* =================================================
-               SAVE ORIGINAL BUTTON TEXT
-            ================================================= */
-
-            button.dataset.originalText =
-                button.textContent;
+                submitButton.dataset.originalText =
+                    submitButton.textContent;
 
 
-            /* =================================================
-               DISABLE BUTTON
-            ================================================= */
+                submitButton.textContent =
+                    "Submitting...";
 
-            button.disabled =
-                true;
-
-
-            button.textContent =
-                "Registering...";
-
-
-            /* =================================================
-               STATUS
-            ================================================= */
-
-            if (status) {
-
-                status.textContent =
-                    "Submitting your registration...";
-
-                status.dataset.state =
-                    "loading";
             }
 
 
-            /* =================================================
-               SEND TO GOOGLE APPS SCRIPT
-            ================================================= */
+            /* ===========================================
+               SHOW LOADING MESSAGE
+            =========================================== */
+
+            showStatus(
+                "Submitting your registration...",
+                "loading"
+            );
+
 
             try {
 
-                console.log(
-                    "Sending registration to Google Sheets..."
+
+                /* =======================================
+                   STEP 1
+                   SEND TO GOOGLE FORM
+                ======================================= */
+
+                await submitToGoogleForm(
+                    formData
                 );
 
 
-                const googleResponse =
-                    await fetch(
-                        GOOGLE_APPS_SCRIPT_URL,
-                        {
-                            method: "POST",
+                /* =======================================
+                   STEP 2
+                   SEND CONFIRMATION EMAIL
+                ======================================= */
 
-                            /*
-                             * IMPORTANT:
-                             *
-                             * Do NOT add:
-                             *
-                             * headers: {
-                             *     "Content-Type":
-                             *         "application/json"
-                             * }
-                             *
-                             * because that can trigger a
-                             * CORS preflight with Apps Script.
-                             */
-
-                            body:
-                                JSON.stringify(params)
-                        }
-                    );
-
-
-                /* =================================================
-                   READ GOOGLE RESPONSE
-                ================================================= */
-
-                const responseText =
-                    await googleResponse.text();
-
-
-                console.log(
-                    "Google Apps Script response:",
-                    responseText
+                await sendConfirmationEmail(
+                    formData
                 );
 
 
-                /* =================================================
-                   PARSE RESPONSE
-                ================================================= */
+                /* =======================================
+                   SUCCESS MESSAGE
+                ======================================= */
 
-                let result;
-
-
-                try {
-
-                    result =
-                        JSON.parse(
-                            responseText
-                        );
-
-                } catch (parseError) {
-
-                    console.error(
-                        "Google response could not be parsed:",
-                        responseText
-                    );
-
-                    throw new Error(
-                        "Google Sheets returned an invalid response."
-                    );
-                }
-
-
-                /* =================================================
-                   DUPLICATE EMAIL
-                ================================================= */
-
-                if (result.duplicate) {
-
-                    if (status) {
-
-                        status.textContent =
-                            "This email address has already been registered.";
-
-                        status.dataset.state =
-                            "error";
-                    }
-
-
-                    alert(
-                        "This email address has already been registered."
-                    );
-
-
-                    /*
-                     * IMPORTANT:
-                     *
-                     * Restore the button before returning.
-                     */
-
-                    button.disabled =
-                        false;
-
-
-                    button.textContent =
-                        button.dataset.originalText ||
-                        "Reserve my seat";
-
-
-                    return;
-                }
-
-
-                /* =================================================
-                   GOOGLE FAILURE
-                ================================================= */
-
-                if (!result.success) {
-
-                    const errorMessage =
-                        result.message ||
-                        "Registration could not be completed.";
-
-
-                    console.error(
-                        "Google Apps Script error:",
-                        errorMessage
-                    );
-
-
-                    if (status) {
-
-                        status.textContent =
-                            errorMessage;
-
-                        status.dataset.state =
-                            "error";
-                    }
-
-
-                    alert(
-                        "Registration could not be completed.\n\n" +
-                        errorMessage
-                    );
-
-
-                    /*
-                     * IMPORTANT:
-                     *
-                     * Restore button.
-                     */
-
-                    button.disabled =
-                        false;
-
-
-                    button.textContent =
-                        button.dataset.originalText ||
-                        "Reserve my seat";
-
-
-                    return;
-                }
-
-
-                /* =================================================
-                   GET REGISTRATION NUMBER
-                ================================================= */
-
-                const registrationNumber =
-                    String(
-                        result.registrationNumber ||
-                        ""
-                    ).trim();
-
-
-                console.log(
-                    "Registration Number:",
-                    registrationNumber
+                showStatus(
+                    "Registration successful! Thank you for registering for She Blossoms.",
+                    "success"
                 );
 
 
-                /* =================================================
-                   MAKE SURE REGISTRATION NUMBER EXISTS
-                ================================================= */
-
-                if (!registrationNumber) {
-
-                    console.error(
-                        "Google Apps Script did not return a registration number.",
-                        result
-                    );
-
-
-                    if (status) {
-
-                        status.textContent =
-                            "Registration was received, but no registration number was returned.";
-
-                        status.dataset.state =
-                            "error";
-                    }
-
-
-                    alert(
-                        "Your registration was received, but the registration number was not returned.\n\n" +
-                        "Please contact the conference team."
-                    );
-
-
-                    /*
-                     * Restore button.
-                     */
-
-                    button.disabled =
-                        false;
-
-
-                    button.textContent =
-                        button.dataset.originalText ||
-                        "Reserve my seat";
-
-
-                    return;
-                }
-
-
-                /* =================================================
-                   GOOGLE SHEETS SUCCESS
-                ================================================= */
-
-                console.log(
-                    "Google Sheets registration successful."
-                );
-
-
-                if (status) {
-
-                    status.textContent =
-                        "Registration submitted successfully!";
-
-                    status.dataset.state =
-                        "success";
-                }
-
-
-                /* =================================================
-                   EMAILJS DATA
-                =================================================
-
-                   THIS MUST MATCH YOUR EMAILJS TEMPLATE:
-
-                   {{name}}
-                   {{registration_number}}
-                   {{email}}
-                   {{number}}
-                   {{address}}
-                   {{occupation}}
-                   {{gender}}
-                   {{first_time}}
-                   {{message}}
-
-                ================================================= */
-
-                const emailData = {
-
-                    /*
-                     * {{name}}
-                     */
-                    name: name,
-
-
-                    /*
-                     * {{email}}
-                     */
-                    email: email,
-
-
-                    /*
-                     * {{number}}
-                     *
-                     * This is the important correction.
-                     */
-                    number: number,
-
-
-                    /*
-                     * Extra aliases.
-                     * They do not hurt anything.
-                     */
-                    phone: number,
-
-                    phone_number: number,
-
-                    telephone: number,
-
-
-                    /*
-                     * {{address}}
-                     */
-                    address: address,
-
-
-                    /*
-                     * {{occupation}}
-                     */
-                    occupation: occupation,
-
-
-                    /*
-                     * {{first_time}}
-                     */
-                    first_time: firstTime.value,
-
-
-                    /*
-                     * {{message}}
-                     */
-                    message: message,
-
-
-                    /*
-                     * {{registration_number}}
-                     */
-                    registration_number:
-                        registrationNumber
-
-                };
-
-
-                console.log(
-                    "EmailJS data:",
-                    emailData
-                );
-
-
-                /* =================================================
-                   SEND EMAILJS
-                ================================================= */
-
-                if (
-                    typeof emailjs !== "undefined" &&
-                    typeof emailjs.send === "function"
-                ) {
-
-                    console.log(
-                        "Sending confirmation through EmailJS..."
-                    );
-
-
-                    /*
-                     * Send EmailJS in the background.
-                     *
-                     * We do NOT make the visitor wait for it.
-                     */
-
-                    emailjs.send(
-                        "service_o9kv3ir",
-                        "template_82ewad3",
-                        emailData
-                    )
-                    .then(
-                        function (emailResult) {
-
-                            console.log(
-                                "EmailJS SUCCESS:",
-                                emailResult
-                            );
-
-                        }
-                    )
-                    .catch(
-                        function (emailError) {
-
-                            console.error(
-                                "EmailJS FAILED:",
-                                emailError
-                            );
-
-                        }
-                    );
-
-                } else {
-
-                    console.error(
-                        "EmailJS is not loaded."
-                    );
-                }
-
-
-                /* =================================================
-                   SHOW SUCCESS MESSAGE
-                ================================================= */
+                /* =======================================
+                   SUCCESS ALERT
+                ======================================= */
 
                 alert(
-                    "Registration submitted successfully!\n\n" +
-                    "Registration Number: " +
-                    registrationNumber
+                    "Registration successful!\n\n" +
+                    "Thank you for registering for She Blossoms."
                 );
 
 
-                /* =================================================
+                /* =======================================
                    RESET FORM
-                ================================================= */
+                ======================================= */
 
-                registerForm.reset();
-
-
-                /* =================================================
-                   RESTORE BUTTON
-                ================================================= */
-
-                button.disabled =
-                    false;
-
-
-                button.textContent =
-                    button.dataset.originalText ||
-                    "Reserve my seat";
+                form.reset();
 
 
             } catch (error) {
 
-                /* =================================================
-                   REGISTRATION ERROR
-                ================================================= */
+
+                /* =======================================
+                   ERROR
+                ======================================= */
 
                 console.error(
-                    "REGISTRATION ERROR:",
+                    "Registration error:",
                     error
                 );
 
 
-                if (status) {
-
-                    status.textContent =
-                        "Something went wrong. Please try again.";
-
-                    status.dataset.state =
-                        "error";
-                }
-
-
-                alert(
-                    "Something went wrong while submitting your registration.\n\n" +
-                    "Please check your internet connection and try again."
+                showStatus(
+                    "Something went wrong while submitting your registration. Please try again.",
+                    "error"
                 );
 
 
-                /* =================================================
-                   ALWAYS RESTORE BUTTON
-                ================================================= */
-
-                button.disabled =
-                    false;
+            } finally {
 
 
-                button.textContent =
-                    button.dataset.originalText ||
-                    "Reserve my seat";
+                /* =======================================
+                   ENABLE BUTTON
+                ======================================= */
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+
+                    submitButton.textContent =
+                        submitButton.dataset.originalText ||
+                        "Reserve my seat";
+
+                }
 
             }
 

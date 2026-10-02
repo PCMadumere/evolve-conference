@@ -859,6 +859,55 @@
             font: 400 1rem/1.4 var(--font);
         }
 
+          /* Gender dropdown - match other form inputs */
+.field select {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font: 400 1rem/1.4 var(--font);
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease,
+        background-color .15s ease;
+
+    cursor: pointer;
+}
+
+/* Focus - same as text inputs */
+.field select:focus {
+    outline: none;
+    border-color: var(--plum);
+    box-shadow: 0 0 0 3px rgba(255, 51, 153, .25);
+}
+
+/* Placeholder */
+.field select:invalid {
+    color: rgba(31, 13, 24, .40);
+}
+
+/* Dropdown options */
+.field select option {
+    color: var(--text);
+    background: var(--bg);
+    font: 400 1rem var(--font);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .field select {
+        min-height: 52px;
+        font-size: 1rem;
+    }
+}
+
         .field textarea {
             min-height: 120px;
             resize: vertical;
@@ -1105,7 +1154,7 @@
             <video class="hero__video" src="/video/hero-video.mp4" autoplay muted loop playsinline preload="auto"
                 aria-hidden="true"></video>
             <div class="wrap">
-                <h1 class="hero__title condensed">Evolve</h1>
+                <p class="hero__title condensed wordmark">Evolve</p>
                 <div class="hero__meta">
                     <div>
                         <p class="hero__date">Create your<br>
@@ -1125,7 +1174,6 @@
                 </div>
             </div>
         </section>
-
 
 
         <!-- =================================================
@@ -1311,7 +1359,6 @@
         </section>
 
 
-
         <!-- =================================================
              CONFERENCE DETAILS
         ================================================== -->
@@ -1387,7 +1434,6 @@
             </div>
 
         </section>
-
 
 
         <!-- =================================================
@@ -1482,53 +1528,326 @@
         </section>
 
         <!-- REGISTRATION FORM -->
-        <section class="section section--flush-top" id="register" aria-labelledby="register-title">
-            <div class="wrap register">
+        <section
+    class="section section--flush-top"
+    id="register"
+    aria-labelledby="register-title">
+
+    <div class="wrap register">
+
+
+        <!-- =================================================
+             LEFT SIDE
+        ================================================= -->
+
+        <div>
+
+            <h2 id="register-title">
+                Reserve your seat
+            </h2>
+
+            <p
+                class="muted"
+                style="margin-top:1rem"
+            >
+                Registration is free and open to every woman.
+            </p>
+
+
+            <dl class="facts">
+
                 <div>
-                    <h2 id="register-title">Reserve your seat</h2>
-                    <p class="muted" style="margin-top:1rem">Registration is free and open to every woman.</p>
-                    <dl class="facts">
-                        <div>
-                            <dt>Dates</dt>
-                            <dd>6–7 November 2026</dd>
-                        </div>
-                        <div>
-                            <dt>Venue</dt>
-                            <dd>WordFeast Auditorium, Alexander David's Event Place, Zik Avenue, Awka</dd>
-                        </div>
-                        <div>
-                            <dt>Questions</dt>
-                            <dd><a class="link" href="mailto:sheblossoms.wgn@gmail.com">sheblossoms.wgn@gmail.com</a>
-                            </dd>
-                        </div>
-                    </dl>
+
+                    <dt>
+                        Dates
+                    </dt>
+
+                    <dd>
+                        6–7 November 2026
+                    </dd>
+
                 </div>
-                <form class="form" id="register-form" novalidate>
-                    <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" type="text"
-                            autocomplete="name" required></div>
-                    <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email"
-                            type="email" autocomplete="email" required></div>
-                    <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" name="number"
-                            type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 0801 234 5678" required>
-                    </div>
-                    <div class="field"><label for="f-address">City or address</label><input id="f-address"
-                            name="address" type="text" autocomplete="street-address"></div>
-                    <div class="field"><label for="f-occupation">Occupation</label><input id="f-occupation"
-                            name="occupation" type="text" autocomplete="organization-title"></div>
-                    <fieldset class="field">
-                        <legend>Is this your first She Blossoms conference?</legend>
-                        <div class="choice">
-                            <label><input type="radio" name="first_time" value="yes" required><span>Yes</span></label>
-                            <label><input type="radio" name="first_time" value="no"><span>No</span></label>
-                        </div>
-                    </fieldset>
-                    <div class="field"><label for="f-message">Anything we should know? (optional)</label><textarea
-                            id="f-message" name="message"></textarea></div>
-                    <button class="btn" type="submit">Reserve my seat</button>
-                    <p class="form__status" role="status" aria-live="polite"></p>
-                </form>
+
+
+                <div>
+
+                    <dt>
+                        Venue
+                    </dt>
+
+                    <dd>
+                        WordFeast Auditorium,
+                        Alexander David's Event Place,
+                        Zik Avenue, Awka
+                    </dd>
+
+                </div>
+
+
+                <div>
+
+                    <dt>
+                        Questions
+                    </dt>
+
+                    <dd>
+
+                        <a
+                            class="link"
+                            href="mailto:sheblossoms.wgn@gmail.com"
+                        >
+                            sheblossoms.wgn@gmail.com
+                        </a>
+
+                    </dd>
+
+                </div>
+
+            </dl>
+
+        </div>
+
+
+        <!-- =================================================
+             REGISTRATION FORM
+        ================================================= -->
+
+        <form
+            class="form"
+            id="register-form"
+            novalidate
+        >
+
+
+            <!-- FULL NAME -->
+
+            <div class="field">
+
+                <label for="f-name">
+                    Full name
+                </label>
+
+                <input
+                    id="f-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    required
+                >
+
             </div>
-        </section>
+
+
+            <!-- EMAIL -->
+
+            <div class="field">
+
+                <label for="f-email">
+                    Email address
+                </label>
+
+                <input
+                    id="f-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="field">
+
+                <label for="f-phone">
+                    Phone number
+                </label>
+
+                <input
+                    id="f-phone"
+                    name="number"
+                    type="tel"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    placeholder="e.g. 0801 234 5678"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="field">
+
+                <label for="f-address">
+                    City or address
+                </label>
+
+                <input
+                    id="f-address"
+                    name="address"
+                    type="text"
+                    autocomplete="street-address"
+                >
+
+            </div>
+
+
+            <!-- OCCUPATION -->
+
+            <div class="field">
+
+                <label for="f-occupation">
+                    Occupation
+                </label>
+
+                <input
+                    id="f-occupation"
+                    name="occupation"
+                    type="text"
+                    autocomplete="organization-title"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 GENDER
+            ================================================= -->
+
+            <div class="field">
+
+                <label for="f-gender">
+                    Gender
+                </label>
+
+                <select
+                    id="f-gender"
+                    name="gender"
+                    required
+                >
+
+                    <option
+                        value=""
+                        selected
+                        disabled
+                    >
+                        Select your gender
+                    </option>
+
+                    <option value="Female">
+                        Female
+                    </option>
+
+                    <option value="Male">
+                        Male
+                    </option>
+
+                    <option value="Prefer not to say">
+                        Prefer not to say
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 FIRST-TIME ATTENDEE
+            ================================================= -->
+
+            <fieldset class="field">
+
+                <legend>
+                    Is this your first She Blossoms conference?
+                </legend>
+
+                <div class="choice">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="first_time"
+                            value="yes"
+                            required
+                        >
+
+                        <span>
+                            Yes
+                        </span>
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="first_time"
+                            value="no"
+                        >
+
+                        <span>
+                            No
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </fieldset>
+
+
+            <!-- =================================================
+                 MESSAGE
+            ================================================= -->
+
+            <div class="field">
+
+                <label for="f-message">
+                    Anything we should know? (optional)
+                </label>
+
+                <textarea
+                    id="f-message"
+                    name="message"
+                ></textarea>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT
+            ================================================= -->
+
+            <button
+                class="btn"
+                type="submit"
+            >
+                Reserve my seat
+            </button>
+
+
+            <!-- =================================================
+                 STATUS
+            ================================================= -->
+
+            <p
+                class="form__status"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+
+        </form>
+
+    </div>
+
+</section>
 
     </main>
     <footer class="footer">

@@ -869,6 +869,55 @@
             font: 400 1rem/1.4 var(--font);
         }
 
+        /* Gender dropdown - match other form inputs */
+.field select {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font: 400 1rem/1.4 var(--font);
+
+    transition:
+        border-color .15s ease,
+        box-shadow .15s ease,
+        background-color .15s ease;
+
+    cursor: pointer;
+}
+
+/* Focus - same as text inputs */
+.field select:focus {
+    outline: none;
+    border-color: var(--plum);
+    box-shadow: 0 0 0 3px rgba(255, 51, 153, .25);
+}
+
+/* Placeholder */
+.field select:invalid {
+    color: rgba(31, 13, 24, .40);
+}
+
+/* Dropdown options */
+.field select option {
+    color: var(--text);
+    background: var(--bg);
+    font: 400 1rem var(--font);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .field select {
+        min-height: 52px;
+        font-size: 1rem;
+    }
+}
+
         .field textarea {
             min-height: 120px;
             resize: vertical;
@@ -1114,7 +1163,7 @@
             <video class="hero__video" src="/video/hero-video.mp4" autoplay muted loop playsinline preload="auto"
                 aria-hidden="true"></video>
             <div class="wrap">
-                <h1 class="hero__title condensed">Evolve</h1>
+                <p class="hero__title condensed wordmark">Evolve</p>
                 <div class="hero__meta">
                     <div>
                         <p class="hero__date">6th-7th November 2026</p>
@@ -1297,50 +1346,62 @@
                 <!-- TODO: replace the four placeholders with real testimonies (get consent; initials only) -->
                 <div class="testimonies">
                     <article class="testimony">
-                        <h3>Testimony headline</h3>
+                        <h3>Divine Healing</h3>
                         <div class="body muted">
-                            <p>The testimony goes here. Two or three short paragraphs work best: what the situation was,
-                                what happened at or after the conference, and where things stand now.</p>
-                            <p>Keep it in her own words, lightly edited for length.</p>
+                            <p>“I want to bless the name of God for my health. In march I was diagnosed with hyperprolatinomia, I was scared and didn’t know what to do.
+
+It was initially 186 instead of 25. I took drugs and it increased to 196 after 3 months. At some point the doctor asked me to do a brain MRI to be sure there is no tumor in my brain 
+
+I met with mama and she spent time teaching me on faith, prayed for me, and asked me to run the test again.
+
+I ran the MRI and found nothing, my brain was perfectly normal and then I did another test and my prolactin level became normal with a number of 20mg. Glory to God!”
+</p>
                         </div>
                         <footer>
-                            <p class="testimony__name condensed">Sis. A.B.</p>
+                            <p class="testimony__name condensed">Favour O.</p>
                             <p class="testimony__meta">The Overflow, 2025</p>
                         </footer>
                     </article>
                     <article class="testimony">
-                        <h3>Testimony headline</h3>
+                        <h3>Sight and abundance</h3>
                         <div class="body muted">
-                            <p>The testimony goes here. Two or three short paragraphs work best: what the situation was,
-                                what happened at or after the conference, and where things stand now.</p>
-                            <p>Keep it in her own words, lightly edited for length.</p>
+                            <p>
+                                "I received the empowerment for ministry, the weight and consciousness of my assignment came on me during the conference. I'm better equipped and empowered to do ministry than I ever was.
+
+Secondly , I received clear instructions from God, clear visions of the near future, and I have walked into the overflow!"
+
+                            </p>
                         </div>
                         <footer>
-                            <p class="testimony__name condensed">Sis. C.D.</p>
+                            <p class="testimony__name condensed">Oge U.</p>
                             <p class="testimony__meta">The Overflow, 2025</p>
                         </footer>
                     </article>
                     <article class="testimony">
-                        <h3>Testimony headline</h3>
+                        <h3>Light and The She Blossoms Foodbank</h3>
                         <div class="body muted">
-                            <p>The testimony goes here. Two or three short paragraphs work best: what the situation was,
-                                what happened at or after the conference, and where things stand now.</p>
+                            <p>
+                                "...Let’s talk about the She Blossoms Foodbank... That one alone? Life-saving! At a time when I was literally thinking of how to survive the week, God showed up through this community. “He prepares a table before me…” (Psalm 23:5) and yes, He truly did. Not just physically, but spiritually too.”
+
+Then came Pastor Ada, the set woman with fire in her words. Her teaching on overflowing rivers hit me deep. She said, “A well symbolizes sustenance. without water, there’s no inhabitation.” She reminded us that we are not called in the realm of time, but of light. That one line changed how I now view my life and purpose.
+
+                            </p>
                             <p>Keep it in her own words, lightly edited for length.</p>
                         </div>
                         <footer>
-                            <p class="testimony__name condensed">Sis. E.F.</p>
+                            <p class="testimony__name condensed">ThankGod N.</p>
                             <p class="testimony__meta">The Overflow, 2025</p>
                         </footer>
                     </article>
                     <article class="testimony">
-                        <h3>Testimony headline</h3>
+                        <h3>Relationship by design</h3>
                         <div class="body muted">
-                            <p>The testimony goes here. Two or three short paragraphs work best: what the situation was,
-                                what happened at or after the conference, and where things stand now.</p>
-                            <p>Keep it in her own words, lightly edited for length.</p>
+                            <p>
+                                The relationship panel? I won’t forget it. I learned to set boundaries, honour myself, and focus on my assignment. Marriage isn’t about pressure or people’s opinions, it’s about the right reason, the right person, and the right season. That truth set me free.
+                            </p>
                         </div>
                         <footer>
-                            <p class="testimony__name condensed">Sis. G.H.</p>
+                            <p class="testimony__name condensed">ThankGod N.</p>
                             <p class="testimony__meta">The Overflow, 2025</p>
                         </footer>
                     </article>
@@ -1364,53 +1425,327 @@
         </section>
 
         <!-- REGISTRATION FORM -->
-        <section class="section section--flush-top" id="register" aria-labelledby="register-title">
-            <div class="wrap register">
+        <section
+    class="section section--flush-top"
+    id="register"
+    aria-labelledby="register-title"
+>
+
+    <div class="wrap register">
+
+
+        <!-- =================================================
+             LEFT SIDE
+        ================================================= -->
+
+        <div>
+
+            <h2 id="register-title">
+                Reserve your seat
+            </h2>
+
+            <p
+                class="muted"
+                style="margin-top:1rem"
+            >
+                Registration is free and open to every woman.
+            </p>
+
+
+            <dl class="facts">
+
                 <div>
-                    <h2 id="register-title">Reserve your seat</h2>
-                    <p class="muted" style="margin-top:1rem">Registration is free and open to every woman.</p>
-                    <dl class="facts">
-                        <div>
-                            <dt>Dates</dt>
-                            <dd>6–7 November 2026</dd>
-                        </div>
-                        <div>
-                            <dt>Venue</dt>
-                            <dd>WordFeast Auditorium, Alexander David's Event Place, Zik Avenue, Awka</dd>
-                        </div>
-                        <div>
-                            <dt>Questions</dt>
-                            <dd><a class="link" href="mailto:sheblossoms.wgn@gmail.com">sheblossoms.wgn@gmail.com</a>
-                            </dd>
-                        </div>
-                    </dl>
+
+                    <dt>
+                        Dates
+                    </dt>
+
+                    <dd>
+                        6–7 November 2026
+                    </dd>
+
                 </div>
-                <form class="form" id="register-form" novalidate>
-                    <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" type="text"
-                            autocomplete="name" required></div>
-                    <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email"
-                            type="email" autocomplete="email" required></div>
-                    <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" name="number"
-                            type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 0801 234 5678" required>
-                    </div>
-                    <div class="field"><label for="f-address">City or address</label><input id="f-address"
-                            name="address" type="text" autocomplete="street-address"></div>
-                    <div class="field"><label for="f-occupation">Occupation</label><input id="f-occupation"
-                            name="occupation" type="text" autocomplete="organization-title"></div>
-                    <fieldset class="field">
-                        <legend>Is this your first She Blossoms conference?</legend>
-                        <div class="choice">
-                            <label><input type="radio" name="first_time" value="yes" required><span>Yes</span></label>
-                            <label><input type="radio" name="first_time" value="no"><span>No</span></label>
-                        </div>
-                    </fieldset>
-                    <div class="field"><label for="f-message">Anything we should know? (optional)</label><textarea
-                            id="f-message" name="message"></textarea></div>
-                    <button class="btn" type="submit">Reserve my seat</button>
-                    <p class="form__status" role="status" aria-live="polite"></p>
-                </form>
+
+
+                <div>
+
+                    <dt>
+                        Venue
+                    </dt>
+
+                    <dd>
+                        WordFeast Auditorium,
+                        Alexander David's Event Place,
+                        Zik Avenue, Awka
+                    </dd>
+
+                </div>
+
+
+                <div>
+
+                    <dt>
+                        Questions
+                    </dt>
+
+                    <dd>
+
+                        <a
+                            class="link"
+                            href="mailto:sheblossoms.wgn@gmail.com"
+                        >
+                            sheblossoms.wgn@gmail.com
+                        </a>
+
+                    </dd>
+
+                </div>
+
+            </dl>
+
+        </div>
+
+
+        <!-- =================================================
+             REGISTRATION FORM
+        ================================================= -->
+
+        <form
+            class="form"
+            id="register-form"
+            novalidate
+        >
+
+
+            <!-- FULL NAME -->
+
+            <div class="field">
+
+                <label for="f-name">
+                    Full name
+                </label>
+
+                <input
+                    id="f-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    required
+                >
+
             </div>
-        </section>
+
+
+            <!-- EMAIL -->
+
+            <div class="field">
+
+                <label for="f-email">
+                    Email address
+                </label>
+
+                <input
+                    id="f-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="field">
+
+                <label for="f-phone">
+                    Phone number
+                </label>
+
+                <input
+                    id="f-phone"
+                    name="number"
+                    type="tel"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    placeholder="e.g. 0801 234 5678"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="field">
+
+                <label for="f-address">
+                    City or address
+                </label>
+
+                <input
+                    id="f-address"
+                    name="address"
+                    type="text"
+                    autocomplete="street-address"
+                >
+
+            </div>
+
+
+            <!-- OCCUPATION -->
+
+            <div class="field">
+
+                <label for="f-occupation">
+                    Occupation
+                </label>
+
+                <input
+                    id="f-occupation"
+                    name="occupation"
+                    type="text"
+                    autocomplete="organization-title"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 GENDER
+            ================================================= -->
+
+            <div class="field">
+
+                <label for="f-gender">
+                    Gender
+                </label>
+
+                <select
+                    id="f-gender"
+                    name="gender"
+                    required
+                >
+
+                    <option
+                        value=""
+                        selected
+                        disabled
+                    >
+                        Select your gender
+                    </option>
+
+                    <option value="Female">
+                        Female
+                    </option>
+
+                    <option value="Male">
+                        Male
+                    </option>
+
+                    <option value="Prefer not to say">
+                        Prefer not to say
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 FIRST-TIME ATTENDEE
+            ================================================= -->
+
+            <fieldset class="field">
+
+                <legend>
+                    Is this your first She Blossoms conference?
+                </legend>
+
+                <div class="choice">
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="first_time"
+                            value="yes"
+                            required
+                        >
+
+                        <span>
+                            Yes
+                        </span>
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="radio"
+                            name="first_time"
+                            value="no"
+                        >
+
+                        <span>
+                            No
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </fieldset>
+
+
+            <!-- =================================================
+                 MESSAGE
+            ================================================= -->
+
+            <div class="field">
+
+                <label for="f-message">
+                    Anything we should know? (optional)
+                </label>
+
+                <textarea
+                    id="f-message"
+                    name="message"
+                ></textarea>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT
+            ================================================= -->
+
+            <button
+                class="btn"
+                type="submit"
+            >
+                Reserve my seat
+            </button>
+
+
+            <!-- =================================================
+                 STATUS
+            ================================================= -->
+
+            <p
+                class="form__status"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+
+        </form>
+
+    </div>
+
+</section>
 
         <!-- OUR PARTNERS/SHOP LINK -->
         <section class="section section--flush-top" aria-label="Partners and shop">
