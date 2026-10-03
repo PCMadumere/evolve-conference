@@ -1,30 +1,42 @@
 /* =========================================================
-   SHE BLOSSOMS REGISTRATION FORM
-
-   WEBSITE FORM
-        ↓
-   GOOGLE FORM
-        ↓
-   GOOGLE SHEET
-
-   EMAILJS
-        ↓
-   CONFIRMATION EMAIL
-
-   GENDER HAS BEEN REMOVED
+   SHE BLOSSOMS REGISTRATION
+   GOOGLE FORMS + EMAILJS
 ========================================================= */
 
 
 /* =========================================================
-   GOOGLE FORM RESPONSE URL
+   GOOGLE FORM
 ========================================================= */
 
 const GOOGLE_FORM_URL =
-    "https://docs.google.com/forms/d/e/1FAIpQLSdzzNdflRISzCkDZo5wIcj5fHE142Ah7UkimIvXhA-XGbzRgg/formResponse";
+    "https://docs.google.com/forms/d/e/1FAIpQLSdzzNdflrISzCkDZo5wIcj5fHE142Ah7UkimIvXhA-XGbzRgg/formResponse";
 
 
 /* =========================================================
-   EMAILJS SETTINGS
+   GOOGLE FORM ENTRY IDs
+========================================================= */
+
+const GOOGLE_FIELDS = {
+
+    name: "entry.6185216",
+
+    email: "entry.1943039311",
+
+    phone: "entry.2008373921",
+
+    address: "entry.491841401",
+
+    occupation: "entry.451425346",
+
+    firstTime: "entry.802888224",
+
+    message: "entry.969123203"
+
+};
+
+
+/* =========================================================
+   EMAILJS
 ========================================================= */
 
 const EMAILJS_SERVICE_ID =
@@ -35,35 +47,33 @@ const EMAILJS_TEMPLATE_ID =
 
 
 /* =========================================================
-   GET REGISTRATION FORM
+   GET WEBSITE FORM
 ========================================================= */
 
 const form =
     document.getElementById("register-form");
 
 
-/* =========================================================
-   STOP IF FORM DOES NOT EXIST
-========================================================= */
-
 if (!form) {
 
     console.error(
-        "Registration form #register-form was not found."
+        "ERROR: #register-form was not found."
     );
 
 } else {
 
 
     /* =====================================================
-       GET FORM ELEMENTS
+       ELEMENTS
     ===================================================== */
 
     const status =
         form.querySelector(".form__status");
 
     const submitButton =
-        form.querySelector('button[type="submit"]');
+        form.querySelector(
+            'button[type="submit"]'
+        );
 
 
     const nameInput =
@@ -86,27 +96,17 @@ if (!form) {
 
 
     /* =====================================================
-       EMAIL VALIDATION
+       STATUS
     ===================================================== */
 
-    function isValidEmail(email) {
-
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-    }
-
-
-    /* =====================================================
-       SHOW STATUS MESSAGE
-    ===================================================== */
-
-    function showStatus(message, type = "") {
+    function showStatus(message, type) {
 
         if (!status) {
             return;
         }
 
-        status.textContent = message;
+        status.textContent =
+            message;
 
         status.classList.remove(
             "success",
@@ -116,7 +116,9 @@ if (!form) {
 
         if (type) {
 
-            status.classList.add(type);
+            status.classList.add(
+                type
+            );
 
         }
 
@@ -124,31 +126,27 @@ if (!form) {
 
 
     /* =====================================================
-       CLEAR STATUS MESSAGE
+       EMAIL VALIDATION
     ===================================================== */
 
-    function clearStatus() {
+    function isValidEmail(email) {
 
-        if (!status) {
-            return;
-        }
-
-        status.textContent = "";
-
-        status.classList.remove(
-            "success",
-            "error",
-            "loading"
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            email
         );
 
     }
 
 
     /* =====================================================
-       GET FIRST-TIME ATTENDEE VALUE
+       GET FIRST-TIME ANSWER
+       
+       Google Forms expects:
+       Yes
+       No
     ===================================================== */
 
-    function getFirstTimerValue() {
+    function getFirstTimeAnswer() {
 
         const selected =
             form.querySelector(
@@ -161,140 +159,293 @@ if (!form) {
 
         }
 
-        return selected.value;
+        const value =
+            selected.value.trim().toLowerCase();
+
+
+        if (value === "yes") {
+
+            return "Yes";
+
+        }
+
+
+        if (value === "no") {
+
+            return "No";
+
+        }
+
+
+        return selected.value.trim();
 
     }
 
 
     /* =====================================================
-       SUBMIT TO GOOGLE FORM
+       SEND TO GOOGLE FORMS
+       
+       Uses a hidden iframe so the user:
+       
+       - stays on the website
+       - does not see Google Forms
+       - does not open a new tab
+       
+       No fetch().
+       No page redirect.
     ===================================================== */
 
-    async function submitToGoogleForm(data) {
+    function submitToGoogleForms(data) {
 
-        const googleFormData =
-            new FormData();
+        return new Promise(function (resolve, reject) {
 
+            try {
 
-        /* -----------------------------------------------
-           FULL NAME
-           Google Form:
-           entry.6185216
-        ------------------------------------------------ */
-
-        googleFormData.append(
-            "entry.6185216",
-            data.name
-        );
+                console.log(
+                    "Submitting to Google Forms:"
+                );
 
 
-        /* -----------------------------------------------
-           EMAIL
-           Google Form:
-           entry.1943039311
-        ------------------------------------------------ */
+                console.table({
 
-        googleFormData.append(
-            "entry.1943039311",
-            data.email
-        );
+                    name:
+                        data.name,
 
+                    email:
+                        data.email,
 
-        /* -----------------------------------------------
-           PHONE
-           Google Form:
-           entry.2008373921
-        ------------------------------------------------ */
+                    phone:
+                        data.phone,
 
-        googleFormData.append(
-            "entry.2008373921",
-            data.phone
-        );
+                    address:
+                        data.address,
 
+                    occupation:
+                        data.occupation,
 
-        /* -----------------------------------------------
-           CITY / ADDRESS
-           Google Form:
-           entry.491841401
-        ------------------------------------------------ */
+                    firstTime:
+                        data.firstTime,
 
-        googleFormData.append(
-            "entry.491841401",
-            data.address
-        );
+                    message:
+                        data.message
+
+                });
 
 
-        /* -----------------------------------------------
-           OCCUPATION
-           Google Form:
-           entry.451425346
-        ------------------------------------------------ */
+                /* -----------------------------------------
+                   CREATE HIDDEN IFRAME
+                ----------------------------------------- */
 
-        googleFormData.append(
-            "entry.451425346",
-            data.occupation
-        );
+                const iframe =
+                    document.createElement(
+                        "iframe"
+                    );
 
 
-        /* -----------------------------------------------
-           FIRST TIME ATTENDEE
-           Google Form:
-           entry.802888224
-        ------------------------------------------------ */
-
-        googleFormData.append(
-            "entry.802888224",
-            data.first_time
-        );
+                const iframeName =
+                    "google-form-" +
+                    Date.now();
 
 
-        /* -----------------------------------------------
-           MESSAGE
-           Google Form:
-           entry.969123203
-        ------------------------------------------------ */
-
-        googleFormData.append(
-            "entry.969123203",
-            data.message
-        );
+                iframe.name =
+                    iframeName;
 
 
-        /* -----------------------------------------------
-           SEND TO GOOGLE FORMS
-        ------------------------------------------------ */
+                iframe.style.display =
+                    "none";
 
-        await fetch(
-            GOOGLE_FORM_URL,
-            {
-                method: "POST",
-                mode: "no-cors",
-                body: googleFormData
+
+                iframe.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+
+                document.body.appendChild(
+                    iframe
+                );
+
+
+                /* -----------------------------------------
+                   CREATE TEMPORARY FORM
+                ----------------------------------------- */
+
+                const googleForm =
+                    document.createElement(
+                        "form"
+                    );
+
+
+                googleForm.method =
+                    "POST";
+
+
+                googleForm.action =
+                    GOOGLE_FORM_URL;
+
+
+                googleForm.target =
+                    iframeName;
+
+
+                googleForm.style.display =
+                    "none";
+
+
+                /* -----------------------------------------
+                   ADD FIELD FUNCTION
+                ----------------------------------------- */
+
+                function addField(
+                    name,
+                    value
+                ) {
+
+                    const input =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    input.type =
+                        "hidden";
+
+
+                    input.name =
+                        name;
+
+
+                    input.value =
+                        value ?? "";
+
+
+                    googleForm.appendChild(
+                        input
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   ADD GOOGLE FORM FIELDS
+                ----------------------------------------- */
+
+                addField(
+                    GOOGLE_FIELDS.name,
+                    data.name
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.email,
+                    data.email
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.phone,
+                    data.phone
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.address,
+                    data.address
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.occupation,
+                    data.occupation
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.firstTime,
+                    data.firstTime
+                );
+
+
+                addField(
+                    GOOGLE_FIELDS.message,
+                    data.message
+                );
+
+
+                /* -----------------------------------------
+                   ADD FORM TO DOCUMENT
+                ----------------------------------------- */
+
+                document.body.appendChild(
+                    googleForm
+                );
+
+
+                /* -----------------------------------------
+                   SUBMIT SILENTLY
+                ----------------------------------------- */
+
+                googleForm.submit();
+
+
+                console.log(
+                    "Google Forms POST sent."
+                );
+
+
+                /* -----------------------------------------
+                   CLEAN UP
+                ----------------------------------------- */
+
+                setTimeout(
+                    function () {
+
+                        googleForm.remove();
+
+                        iframe.remove();
+
+                        resolve(true);
+
+                    },
+                    1500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Google Forms submission error:",
+                    error
+                );
+
+
+                reject(error);
+
             }
-        );
 
-
-        return true;
+        });
 
     }
 
 
     /* =====================================================
-       SEND CONFIRMATION EMAIL WITH EMAILJS
+       EMAILJS CONFIRMATION
     ===================================================== */
 
-    async function sendConfirmationEmail(data) {
+    async function sendConfirmationEmail(
+        data
+    ) {
 
-        /* -----------------------------------------------
+        /* -----------------------------------------
            CHECK EMAILJS
-        ------------------------------------------------ */
+        ----------------------------------------- */
 
         if (
             typeof emailjs === "undefined"
         ) {
 
             console.warn(
-                "EmailJS is not loaded. Confirmation email skipped."
+                "EmailJS is not loaded."
             );
 
             return false;
@@ -304,9 +455,9 @@ if (!form) {
 
         try {
 
-            /* -------------------------------------------
+            /* -----------------------------------------
                SEND EMAIL
-            ------------------------------------------- */
+            ----------------------------------------- */
 
             await emailjs.send(
 
@@ -332,7 +483,7 @@ if (!form) {
                         data.occupation,
 
                     first_time:
-                        data.first_time,
+                        data.firstTime,
 
                     message:
                         data.message
@@ -342,15 +493,21 @@ if (!form) {
             );
 
 
+            console.log(
+                "EmailJS confirmation sent."
+            );
+
+
             return true;
 
 
         } catch (error) {
 
             console.error(
-                "EmailJS confirmation failed:",
+                "EmailJS error:",
                 error
             );
+
 
             return false;
 
@@ -367,24 +524,12 @@ if (!form) {
         "submit",
         async function (event) {
 
-
-            /* -------------------------------------------
-               STOP NORMAL FORM SUBMISSION
-            ------------------------------------------- */
-
             event.preventDefault();
 
 
-            /* -------------------------------------------
-               CLEAR OLD STATUS
-            ------------------------------------------- */
-
-            clearStatus();
-
-
-            /* -------------------------------------------
-               GET FORM VALUES
-            ------------------------------------------- */
+            /* -----------------------------------------
+               GET VALUES
+            ----------------------------------------- */
 
             const name =
                 nameInput
@@ -417,7 +562,7 @@ if (!form) {
 
 
             const firstTime =
-                getFirstTimerValue();
+                getFirstTimeAnswer();
 
 
             const message =
@@ -426,9 +571,9 @@ if (!form) {
                     : "";
 
 
-            /* ===========================================
-               VALIDATE NAME
-            =========================================== */
+            /* =================================================
+               VALIDATION
+            ================================================= */
 
             if (!name) {
 
@@ -437,20 +582,16 @@ if (!form) {
                     "error"
                 );
 
+
                 if (nameInput) {
-
                     nameInput.focus();
-
                 }
+
 
                 return;
 
             }
 
-
-            /* ===========================================
-               VALIDATE EMAIL
-            =========================================== */
 
             if (!email) {
 
@@ -459,20 +600,16 @@ if (!form) {
                     "error"
                 );
 
+
                 if (emailInput) {
-
                     emailInput.focus();
-
                 }
+
 
                 return;
 
             }
 
-
-            /* ===========================================
-               VALIDATE EMAIL FORMAT
-            =========================================== */
 
             if (!isValidEmail(email)) {
 
@@ -481,20 +618,16 @@ if (!form) {
                     "error"
                 );
 
+
                 if (emailInput) {
-
                     emailInput.focus();
-
                 }
+
 
                 return;
 
             }
 
-
-            /* ===========================================
-               VALIDATE PHONE
-            =========================================== */
 
             if (!phone) {
 
@@ -503,20 +636,52 @@ if (!form) {
                     "error"
                 );
 
+
                 if (phoneInput) {
-
                     phoneInput.focus();
-
                 }
+
 
                 return;
 
             }
 
 
-            /* ===========================================
-               VALIDATE FIRST-TIME QUESTION
-            =========================================== */
+            if (!address) {
+
+                showStatus(
+                    "Please enter your city or address.",
+                    "error"
+                );
+
+
+                if (addressInput) {
+                    addressInput.focus();
+                }
+
+
+                return;
+
+            }
+
+
+            if (!occupation) {
+
+                showStatus(
+                    "Please enter your occupation.",
+                    "error"
+                );
+
+
+                if (occupationInput) {
+                    occupationInput.focus();
+                }
+
+
+                return;
+
+            }
+
 
             if (!firstTime) {
 
@@ -525,16 +690,17 @@ if (!form) {
                     "error"
                 );
 
+
                 return;
 
             }
 
 
-            /* ===========================================
-               PREPARE FORM DATA
-            =========================================== */
+            /* =================================================
+               PREPARE DATA
+            ================================================= */
 
-            const formData = {
+            const data = {
 
                 name:
                     name,
@@ -551,7 +717,7 @@ if (!form) {
                 occupation:
                     occupation,
 
-                first_time:
+                firstTime:
                     firstTime,
 
                 message:
@@ -560,27 +726,35 @@ if (!form) {
             };
 
 
-            /* ===========================================
-               DISABLE SUBMIT BUTTON
-            =========================================== */
+            /* =================================================
+               DEBUG
+            ================================================= */
 
-            if (submitButton) {
-
-                submitButton.disabled =
-                    true;
-
-                submitButton.dataset.originalText =
-                    submitButton.textContent;
-
-                submitButton.textContent =
-                    "Submitting...";
-
-            }
+            console.log(
+                "FINAL REGISTRATION DATA:"
+            );
 
 
-            /* ===========================================
-               SHOW LOADING MESSAGE
-            =========================================== */
+            console.table(
+                data
+            );
+
+
+            /* =================================================
+               BUTTON
+            ================================================= */
+
+            const originalText =
+                submitButton.textContent;
+
+
+            submitButton.disabled =
+                true;
+
+
+            submitButton.textContent =
+                "Submitting...";
+
 
             showStatus(
                 "Submitting your registration...",
@@ -591,29 +765,27 @@ if (!form) {
             try {
 
 
-                /* =======================================
-                   STEP 1
-                   SEND TO GOOGLE FORM
-                ======================================= */
+                /* =============================================
+                   GOOGLE FORMS
+                ============================================= */
 
-                await submitToGoogleForm(
-                    formData
+                await submitToGoogleForms(
+                    data
                 );
 
 
-                /* =======================================
-                   STEP 2
-                   SEND CONFIRMATION EMAIL
-                ======================================= */
+                /* =============================================
+                   EMAILJS
+                ============================================= */
 
                 await sendConfirmationEmail(
-                    formData
+                    data
                 );
 
 
-                /* =======================================
-                   SUCCESS MESSAGE
-                ======================================= */
+                /* =============================================
+                   SUCCESS STATUS
+                ============================================= */
 
                 showStatus(
                     "Registration successful! Thank you for registering for She Blossoms.",
@@ -621,29 +793,44 @@ if (!form) {
                 );
 
 
-                /* =======================================
-                   SUCCESS ALERT
-                ======================================= */
+                /* =============================================
+                   SUCCESS BUTTON
+                ============================================= */
 
-                alert(
-                    "Registration successful!\n\n" +
-                    "Thank you for registering for She Blossoms."
-                );
+                submitButton.textContent =
+                    "Registration successful ✓";
 
 
-                /* =======================================
+                /* =============================================
                    RESET FORM
-                ======================================= */
+                ============================================= */
 
                 form.reset();
 
 
+                /* =============================================
+                   RETURN BUTTON TO ORIGINAL TEXT
+                ============================================= */
+
+                setTimeout(
+                    function () {
+
+                        submitButton.textContent =
+                            originalText;
+
+
+                        showStatus(
+                            "",
+                            ""
+                        );
+
+
+                    },
+                    2500
+                );
+
+
             } catch (error) {
-
-
-                /* =======================================
-                   ERROR
-                ======================================= */
 
                 console.error(
                     "Registration error:",
@@ -652,30 +839,27 @@ if (!form) {
 
 
                 showStatus(
-                    "Something went wrong while submitting your registration. Please try again.",
+                    "Something went wrong. Please try again.",
                     "error"
                 );
 
 
-            } finally {
+                /* -----------------------------------------
+                   RETURN BUTTON
+                ----------------------------------------- */
 
-
-                /* =======================================
-                   ENABLE SUBMIT BUTTON
-                ======================================= */
-
-                if (submitButton) {
-
-                    submitButton.disabled =
-                        false;
-
-                    submitButton.textContent =
-                        submitButton.dataset.originalText ||
-                        "Reserve my seat";
-
-                }
+                submitButton.textContent =
+                    originalText;
 
             }
+
+
+            /* =================================================
+               RE-ENABLE BUTTON
+            ================================================= */
+
+            submitButton.disabled =
+                false;
 
         }
     );
