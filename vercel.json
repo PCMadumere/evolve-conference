@@ -1,12 +1,12 @@
 {
   "redirects": [
     {
-      "source": "//shop",
+      "source": "/shop.html",
       "destination": "/shop",
       "permanent": true
     },
     {
-      "source": "//card",
+      "source": "/card.html",
       "destination": "/card",
       "permanent": true
     }
@@ -14,11 +14,11 @@
   "rewrites": [
     {
       "source": "/shop",
-      "destination": "//shop"
+      "destination": "/shop.html"
     },
     {
       "source": "/card",
-      "destination": "//card"
+      "destination": "/card.html"
     },
     {
       "source": "/register",
