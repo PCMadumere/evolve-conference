@@ -2067,3 +2067,7 @@ body.card-page {
         display: none !important;
     }
 }
+
+
+/* Evolve portrait card: preserve the original 1080 × 1350 artwork ratio. */
+.card-page .canvas-container canvas { aspect-ratio: 1080 / 1350; height: auto; }
