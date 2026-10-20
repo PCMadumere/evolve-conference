@@ -25,7 +25,7 @@
     const HEIGHT = 1350;
 
     const ASSETS = {
-    background: "/images/evolve-card-bg.jpg",
+    background: "/images/evolve-card-bg.webp",
     ring: "/images/evolve-card-ring.png"
 };
 
@@ -37,16 +37,16 @@
      */
 
     const PHOTO = {
-        x: 539.5,
-        y: 529.5,
+        x: 560.5,
+        y: 572.5,
         radius: 244
     };
 
     const RING = {
-        x: 278,
-        y: 268,
-        width: 524,
-        height: 523
+        x: 308,
+        y: 328,
+        width: 500,
+        height: 500
     };
 
     /*
@@ -55,8 +55,8 @@
      */
 
     const NAME = {
-        x: 318,
-        baseline: 913,
+        x: 540,
+        baseline: 936,
         maxWidth: 680,
         maxSize: 42,
         minSize: 20
@@ -133,7 +133,7 @@
 
     function getName() {
         return nameInput
-            ? nameInput.value.trim()
+            ? nameInput.value.trim().toUpperCase()
             : "";
     }
 
@@ -144,7 +144,7 @@
                 .trim()
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-+|-+$/g, "")
-            || "attendee"
+            || "ATTENDEE"
         );
     }
 
@@ -238,7 +238,7 @@
 
         ctx.save();
 
-        ctx.textAlign = "left";
+        ctx.textAlign = "center";
         ctx.textBaseline = "alphabetic";
         ctx.fillStyle = "#FFFFFF";
 
