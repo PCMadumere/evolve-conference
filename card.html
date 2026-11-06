@@ -267,6 +267,11 @@
             color: var(--night);
         }
 
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
         .link {
             font-weight: 600;
             text-decoration: underline;
@@ -1544,7 +1549,7 @@
         <div>
 
             <h2 id="register-title">
-                Reserve your seat
+                Evolve is happening now...
             </h2>
 
             <p
@@ -1633,7 +1638,7 @@
                     name="name"
                     type="text"
                     autocomplete="name"
-                    required
+                    readonly
                 >
 
             </div>
@@ -1652,7 +1657,7 @@
                     name="email"
                     type="email"
                     autocomplete="email"
-                    required
+                    readonly
                 >
 
             </div>
@@ -1673,7 +1678,7 @@
                     autocomplete="tel"
                     inputmode="tel"
                     placeholder="e.g. 0801 234 5678"
-                    required
+                    readonly
                 >
 
             </div>
@@ -1692,6 +1697,7 @@
                     name="address"
                     type="text"
                     autocomplete="street-address"
+                    readonly
                 >
 
             </div>
@@ -1710,6 +1716,7 @@
                     name="occupation"
                     type="text"
                     autocomplete="organization-title"
+                    readonly
                 >
 
             </div>
@@ -1733,7 +1740,7 @@
                             type="radio"
                             name="first_time"
                             value="yes"
-                            required
+                            readonly
                         >
 
                         <span>
@@ -1749,6 +1756,7 @@
                             type="radio"
                             name="first_time"
                             value="no"
+                            readonly
                         >
 
                         <span>
@@ -1775,6 +1783,7 @@
                 <textarea
                     id="f-message"
                     name="message"
+                    readonly
                 ></textarea>
 
             </div>
@@ -1787,8 +1796,9 @@
             <button
                 class="btn"
                 type="submit"
+                disabled
             >
-                Reserve my seat
+                Evolve is happening now...
             </button>
 
 

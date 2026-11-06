@@ -258,6 +258,11 @@
             color: var(--night);
         }
 
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
         .link {
             font-weight: 600;
             text-decoration: underline;
@@ -2335,7 +2340,7 @@
                             Full name
                         </label>
 
-                        <input id="f-name" name="name" type="text" autocomplete="name" required>
+                        <input id="f-name" name="name" type="text" autocomplete="name" readonly>
 
                     </div>
 
@@ -2348,7 +2353,7 @@
                             Email address
                         </label>
 
-                        <input id="f-email" name="email" type="email" autocomplete="email" required>
+                        <input id="f-email" name="email" type="email" autocomplete="email" readonly>
 
                     </div>
 
@@ -2362,7 +2367,7 @@
                         </label>
 
                         <input id="f-phone" name="number" type="tel" autocomplete="tel" inputmode="tel"
-                            placeholder="e.g. 0801 234 5678" required>
+                            placeholder="e.g. 0801 234 5678" readonly>
 
                     </div>
 
@@ -2375,7 +2380,7 @@
                             City or address
                         </label>
 
-                        <input id="f-address" name="address" type="text" autocomplete="street-address">
+                        <input id="f-address" name="address" type="text" autocomplete="street-address" readonly>
 
                     </div>
 
@@ -2388,7 +2393,7 @@
                             Occupation
                         </label>
 
-                        <input id="f-occupation" name="occupation" type="text" autocomplete="organization-title">
+                        <input id="f-occupation" name="occupation" type="text" autocomplete="organization-title" readonly>
 
                     </div>
 
@@ -2407,7 +2412,7 @@
 
                             <label>
 
-                                <input type="radio" name="first_time" value="yes" required>
+                                <input type="radio" name="first_time" value="yes" readonly>
 
                                 <span>
                                     Yes
@@ -2418,7 +2423,7 @@
 
                             <label>
 
-                                <input type="radio" name="first_time" value="no">
+                                <input type="radio" name="first_time" value="no" readonly>
 
                                 <span>
                                     No
@@ -2441,7 +2446,7 @@
                             Anything we should know? (optional)
                         </label>
 
-                        <textarea id="f-message" name="message"></textarea>
+                        <textarea id="f-message" name="message" readonly></textarea>
 
                     </div>
 
@@ -2450,8 +2455,8 @@
                  SUBMIT
             ================================================= -->
 
-                    <button class="btn" type="submit">
-                        Reserve my seat
+                    <button class="btn" type="submit" disabled>
+                        Evolve is happening now...
                     </button>
 
 

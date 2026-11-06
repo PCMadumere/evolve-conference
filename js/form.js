@@ -525,6 +525,7 @@ if (!form) {
         async function (event) {
 
             event.preventDefault();
+            return false;
 
 
             /* -----------------------------------------
